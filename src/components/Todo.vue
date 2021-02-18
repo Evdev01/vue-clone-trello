@@ -1,0 +1,118 @@
+<template>
+  <div class="todos">
+    <div class="todo" :class="{ todoCheck: !todo.completed }" v-for="(todo, index) in todos" :key="index">
+      <div class="todo-header" :class="{ todoCheck: !todo.completed }">
+        <p>{{ todo.title }}</p>
+        <p style="cursor: pointer" @click="removeTodo(index)">x</p>
+      </div>
+      <div class="todo-body">
+        <p>{{ todo.description }}</p>
+      </div>
+      <div class="todoInput">
+        <p>Выполнено:</p>
+        <input
+            type="checkbox"
+            v-on:change="todo.completed = !todo.completed"
+            @click="todoComplete(index)"
+        >
+
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "Todo",
+  props: {
+    todos: {
+      type: Array,
+      required: true
+    }
+  },
+  methods: {
+    removeTodo(index) {
+      this.$emit(`remove`, index)
+    },
+    todoComplete(index) {
+
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+  .todo {
+    width: 100%;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    text-align: left;
+    transition: all .55s cubic-bezier(.02, .01, .47, 1);
+    box-shadow: 0 30px 30px rgba(0, 0, 0, .02);
+
+    &.todoCheck {
+      background-color: red;
+    }
+
+    &:hover {
+      box-shadow: 0 30px 30px rgba(0, 0, 0, .04);
+      transform: translate(0, -6px);
+      transition-delay: 0s !important;
+    }
+
+  }
+
+.todoInput {
+  display: flex;
+  align-items: center;
+
+  & input {
+    padding: 0;
+    margin: 0;
+  }
+}
+
+  .todo-body {
+    p {
+      margin: 20px 0;
+    }
+
+    span {
+      font-size: 14px;
+      color: #999999;
+    }
+  }
+
+  .todo-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    h1 {
+      font-size: 32px;
+    }
+
+    p {
+      font-size: 22px;
+      color: #402caf;
+    }
+
+    svg {
+      margin-right: 12px;
+      color: #999999;
+
+      &.active {
+        color: #402caf;
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      &.full {
+        justify-content: center;
+      }
+    }
+  }
+</style>
