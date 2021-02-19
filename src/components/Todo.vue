@@ -9,19 +9,17 @@
         <p>{{ todo.description }}</p>
       </div>
       <div class="todoInput">
-        <p>Выполнено:</p>
-        <input
-            type="checkbox"
-            v-on:change="todo.completed = !todo.completed"
-            @click="todoComplete(index)"
-        >
-
+        <p class="todoCompleted" @click="todoCompleted(todo)">В Выполненые</p>
+        <p class="todoExpired" @click="todoExpired(todo)">В просроченные</p>
       </div>
+
     </div>
   </div>
 </template>
 
 <script>
+import {mapActions} from 'vuex'
+
 export default {
   name: "Todo",
   props: {
@@ -31,13 +29,8 @@ export default {
     }
   },
   methods: {
-    removeTodo(index) {
-      this.$emit(`remove`, index)
-    },
-    todoComplete(index) {
-
+    ...mapActions(['removeTodo', 'todoCompleted', 'todoExpired'])
     }
-  }
 }
 </script>
 
@@ -66,12 +59,29 @@ export default {
 .todoInput {
   display: flex;
   align-items: center;
+  flex-direction: column;
 
   & input {
     padding: 0;
     margin: 0;
   }
 }
+
+  .todoCompleted {
+    cursor: pointer;
+    &:hover {
+      color: #26de81;
+    }
+  }
+
+  .todoExpired {
+    cursor: pointer;
+    &:hover {
+      color: #de2626;
+    }
+  }
+
+
 
   .todo-body {
     p {

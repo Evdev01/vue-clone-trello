@@ -13,7 +13,7 @@
       </div>
     </div>
     <!-- Search input -->
-    <input type="text" :placeholder="placeholder" v-model="search"/>
+    <input type="text" placeholder="Find your todo" v-model="search"/>
 
   </div>
 </template>
@@ -25,21 +25,19 @@ export default {
     value: {
       type: String,
       required: true
-    },
-    placeholder: {
-      type: String,
-      default: 'Search'
-    },
+    }
   },
   data() {
-    return {search: this.value}
+    return {
+      search: this.value
+    }
   },
   watch: {
     search(val) {
       console.log(val)
       this.$emit('search', val);
     }
-  },
+  }
 
 }
 </script>

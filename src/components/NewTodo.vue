@@ -1,30 +1,36 @@
 <template>
-  <div class="new-note">
-
-    <label>Title</label>
-
-    <input v-model="todo.title" type="text">
-    <label>Description</label>
-
-    <textarea v-model="todo.description"></textarea>
-    <button class="btn btnPrimary btnNewNote" @click="addTodo">New Todo</button>
-
-  </div>
+  <form @submit.prevent="submit">
+    <input type="text" placeholder="title" v-model="title">
+    <input type="text" placeholder="body" v-model="description">
+    <button @click="addTodo">Create Post</button>
+    <hr>
+  </form>
 </template>
 
 <script>
+import {mapGetters, mapMutations} from 'vuex'
+
 export default {
-name: "NewTodo",
-  props: {
-    todo: {
-      type: Object,
-      required: true
+  name: "NewTodo",
+  data() {
+    return {
+      title: '',
+      description: '',
+      completed: false
     }
   },
+  computed: {
+    ...mapGetters(['todoList'])
+  },
   methods: {
-    addTodo() {
-      this.$emit('addTodo', this.todo)
-      console.log(this.todo)
+    ...mapMutations(['addTodo']),
+    submit() {
+      this.addTodo({
+        title: this.title,
+        description: this.description,
+        completed: this.completed,
+      })
+      this.title = this.description = ''
     }
   }
 }

@@ -3,31 +3,32 @@
     <div class="container">
       <div class="main__wrapper-inner">
         <div class="main__wrapper-item">
-          <p class="main__wrapper-title">Список задач: </p>
+          <p class="main__wrapper-title">Активные: </p>
+
           <Todo
-              @remove="removeTodo"
-              :todos="todosFilter"
+              :todos="notesFilter"
           />
+
         </div>
         <div class="main__wrapper-item">
-          <p>Список в процессе:</p>
+          <p>Просроченные: </p>
+
+          <ExpiredTodo/>
+<!--          <NewTodo/>-->
+<!--          <SearchTodo-->
+<!--          :value="search"-->
+<!--          @search="search = $event"-->
+<!--          />-->
 
         </div>
         <div class="main__wrapper-item">
           <p>Выполненные: </p>
-
+            <CompletedTodo/>
         </div>
       </div>
 
 
-      <!--      <NewTodo-->
-      <!--          :todo="todo"-->
-      <!--          @addTodo="addTodo"-->
-      <!--      />-->
-      <!--    <SearchTodo-->
-      <!--        :value="search"-->
-      <!--        placeholder="Find your todo"-->
-      <!--        @search="search = $event"/>-->
+
 
 
     </div>
@@ -38,65 +39,23 @@
 import NewTodo from '@/components/NewTodo'
 import SearchTodo from '@/components/SearchTodo'
 import Todo from '@/components/Todo'
+import {mapGetters} from 'vuex'
+import CompletedTodo from '@/components/CompletedTodo'
+import ExppiredTodo from '@/components/ExpiredTodo'
+import ExpiredTodo from '@/components/ExpiredTodo'
 
 export default {
   name: "MainWrapper",
-  components: {Todo, SearchTodo, NewTodo},
+  components: {ExpiredTodo, ExppiredTodo, CompletedTodo, Todo, SearchTodo, NewTodo},
   data() {
-    return {
-      todo: {
-        title: '',
-        search: '',
-        description: ''
-      },
-      todos: [
-        {
-          title: 'First Note',
-          description: 'Description for first note',
-          date: new Date(Date.now()).toLocaleString(),
-          completed: false
-        },
-        {
-          title: 'Second Note',
-          description: 'Description for second note',
-          date: new Date(Date.now()).toLocaleString(),
-          completed: false
-        },
-        {
-          title: 'Third Note',
-          description: 'Description for third note',
-          date: new Date(Date.now()).toLocaleString(),
-          completed: false
-        }
-      ]
-    }
-  },
-  methods: {
-    addTodo() {
-      let {title, description, completed} = this.todo
-
-      if (title === '') {
-        this.message = 'title can`t be blank!'
-        return false
-      }
-
-      this.todos.push({
-        title,
-        description,
-        completed,
-        date: new Date(Date.now()).toLocaleString()
-      })
-      this.todo.title = ''
-      this.todo.description = ''
-      this.message = null
-    },
-    removeTodo(index) {
-      this.todos.splice(index, 1)
+    return{
+      search: ''
     }
   },
   computed: {
-    todosFilter() {
-      let array = this.todos,
+    ...mapGetters(['todoList']),
+    notesFilter() {
+      let array = this.todoList,
           search = this.search
       if (!search) return array
       search = search.trim().toLowerCase()
@@ -107,7 +66,7 @@ export default {
       })
       return array
     }
-  }
+  },
 }
 </script>
 
