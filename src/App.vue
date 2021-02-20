@@ -12,6 +12,11 @@ import MainWrapper from '@/components/MainWrapper'
 
 export default {
   name: 'App',
+  data() {
+    return {
+    }
+  },
+
   components: {
     MainWrapper,
   }

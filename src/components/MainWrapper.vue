@@ -13,6 +13,8 @@
         <div class="main__wrapper-item">
           <p>Просроченные: </p>
 
+          <NewTodo/>
+
           <ExpiredTodo/>
 <!--          <NewTodo/>-->
 <!--          <SearchTodo-->
@@ -49,13 +51,19 @@ export default {
   components: {ExpiredTodo, ExppiredTodo, CompletedTodo, Todo, SearchTodo, NewTodo},
   data() {
     return{
-      search: ''
+      search: '',
+      todoLocal: []
     }
+  },
+  async mounted() {
+    const data = await localStorage.getItem('todosLocal')
+    this.todoLocal = JSON.parse(data)
+    console.log(this.todoLocal)
   },
   computed: {
     ...mapGetters(['todoList']),
     notesFilter() {
-      let array = this.todoList,
+      let array = this.todoLocal,
           search = this.search
       if (!search) return array
       search = search.trim().toLowerCase()

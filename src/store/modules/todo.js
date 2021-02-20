@@ -1,7 +1,7 @@
 export default {
     mutations: {
-        removeTodo(state, index) {
-            state.todos.splice(index, 1)
+        removeTodo(state, id) {
+            state.todos.splice(id, 1)
         },
         removeTodoCompleted(state, index) {
             state.completed.splice(index, 1)
@@ -11,6 +11,7 @@ export default {
         },
         addTodo(state, todo) {
             state.todos.unshift(todo)
+            console.log(state.todos)
         },
         todoCompleted(state, todo) {
             state.completed.unshift(todo)
@@ -19,11 +20,14 @@ export default {
         todoExpired(state, todo) {
             state.inProgress.unshift(todo)
             state.todos.splice(todo, 1)
+        },
+        todoOverdue(state, todo) {
+            todo.todoOverdue = true
         }
     },
     actions: {
-        removeTodo(ctx, index) {
-            ctx.commit('removeTodo', index)
+        removeTodo(ctx, id) {
+            ctx.commit('removeTodo', id)
         },
         removeTodoCompleted(ctx, index) {
             ctx.commit('removeTodoCompleted', index)
@@ -40,30 +44,14 @@ export default {
         todoExpired(ctx, todo) {
             ctx.commit('todoExpired', todo)
         },
+        todoOverdue(ctx, todo) {
+            ctx.commit('todoOverdue', todo)
+        }
     },
     state: {
-        todos: [
-            {
-                title: 'First Note',
-                description: 'Description for first note',
-                date: new Date(Date.now()).toLocaleString(),
-                completed: true
-            },
-            {
-                title: 'Second Note',
-                description: 'Description for second note',
-                date: new Date(Date.now()).toLocaleString(),
-                completed: true
-            },
-            {
-                title: 'Third Note',
-                description: 'Description for third note',
-                date: new Date(Date.now()).toLocaleString(),
-                completed: true
-            }
-        ],
+        todos: [],
         inProgress: [],
-        completed: [],
+        completed: []
     },
     getters: {
         todoList(state) {
@@ -74,6 +62,6 @@ export default {
         },
         todoExpiredList(state) {
             return state.inProgress
-        },
+        }
     }
 }

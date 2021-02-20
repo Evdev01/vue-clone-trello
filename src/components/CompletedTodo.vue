@@ -18,7 +18,7 @@ import {mapActions, mapGetters} from 'vuex'
 export default {
 name: "CompletedTodo",
   methods: {
-    ...mapActions(['todoCompleted', 'todoExpired'])
+    ...mapActions(['removeTodoCompleted'])
   },
   computed: {
     ...mapGetters(['todoCompletedList'])

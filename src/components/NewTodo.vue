@@ -2,7 +2,7 @@
   <form @submit.prevent="submit">
     <input type="text" placeholder="title" v-model="title">
     <input type="text" placeholder="body" v-model="description">
-    <button @click="addTodo">Create Post</button>
+    <button>Create Post</button>
     <hr>
   </form>
 </template>
@@ -14,23 +14,35 @@ export default {
   name: "NewTodo",
   data() {
     return {
+      id: null,
       title: '',
       description: '',
-      completed: false
+      completed: true,
+      todoOverdue: false,
+      todosLocal: []
     }
   },
+
   computed: {
     ...mapGetters(['todoList'])
   },
   methods: {
     ...mapMutations(['addTodo']),
     submit() {
-      this.addTodo({
-        title: this.title,
-        description: this.description,
-        completed: this.completed,
-      })
-      this.title = this.description = ''
+      if (this.title.trim() && this.description.trim()) {
+        let todo = {
+          id: new Date().getTime(),
+          title: this.title,
+          description: this.description,
+          completed: this.completed,
+          todoOverdue: this.todoOverdue
+        }
+        this.addTodo(todo)
+
+        localStorage.setItem('todosLocal', JSON.stringify(this.todoList))
+
+        this.title = this.description = ''
+      }
     }
   }
 }
