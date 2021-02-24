@@ -1,8 +1,15 @@
 <template>
   <div class="main__wrapper">
     <div class="container">
+      <NewTodo/>
+      <SearchTodo
+          :value="search"
+          @search="search = $event"
+      />
+
       <div class="main__wrapper-inner">
         <div class="main__wrapper-item">
+
           <p class="main__wrapper-title">Активные: </p>
 
           <Todo
@@ -11,28 +18,18 @@
 
         </div>
         <div class="main__wrapper-item">
-          <p>Просроченные: </p>
+          <p class="main__wrapper-title">Просроченные: </p>
 
-          <NewTodo/>
 
           <ExpiredTodo/>
-<!--          <NewTodo/>-->
-<!--          <SearchTodo-->
-<!--          :value="search"-->
-<!--          @search="search = $event"-->
-<!--          />-->
+
 
         </div>
         <div class="main__wrapper-item">
-          <p>Выполненные: </p>
+          <p class="main__wrapper-title">Выполненные: </p>
             <CompletedTodo/>
         </div>
       </div>
-
-
-
-
-
     </div>
   </div>
 </template>
@@ -43,12 +40,11 @@ import SearchTodo from '@/components/SearchTodo'
 import Todo from '@/components/Todo'
 import {mapGetters} from 'vuex'
 import CompletedTodo from '@/components/CompletedTodo'
-import ExppiredTodo from '@/components/ExpiredTodo'
 import ExpiredTodo from '@/components/ExpiredTodo'
 
 export default {
   name: "MainWrapper",
-  components: {ExpiredTodo, ExppiredTodo, CompletedTodo, Todo, SearchTodo, NewTodo},
+  components: {ExpiredTodo, CompletedTodo, Todo, SearchTodo, NewTodo},
   data() {
     return{
       search: '',
@@ -58,12 +54,11 @@ export default {
   async mounted() {
     const data = await localStorage.getItem('todosLocal')
     this.todoLocal = JSON.parse(data)
-    console.log(this.todoLocal)
   },
   computed: {
     ...mapGetters(['todoList']),
     notesFilter() {
-      let array = this.todoLocal,
+      let array = this.todoList,
           search = this.search
       if (!search) return array
       search = search.trim().toLowerCase()
@@ -74,7 +69,7 @@ export default {
       })
       return array
     }
-  },
+  }
 }
 </script>
 

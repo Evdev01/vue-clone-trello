@@ -8,6 +8,8 @@
       <div class="todo-body">
         <p>{{ todo.description }}</p>
       </div>
+      <p class="todoCompleted" @click="todoExpiredToActive(todo)">В Активные</p>
+      <p class="todoExpired" @click="todoExpiredToCompleted(todo)">В выполненые</p>
     </div>
   </div>
 </template>
@@ -18,7 +20,7 @@ import {mapActions, mapGetters} from 'vuex'
 export default {
 name: "ExpiredTodo",
   methods: {
-    ...mapActions(['todoExpired', 'removeTodoExpired'])
+    ...mapActions(['todoExpired', 'removeTodoExpired', 'todoExpiredToActive', 'todoExpiredToCompleted'])
   },
   computed: {
     ...mapGetters(['todoExpiredList'])
@@ -29,5 +31,12 @@ name: "ExpiredTodo",
 <style scoped>
   .todo {
     background-color: #ff0000;
+  }
+  .todoCompleted:hover {
+    color: #ffffff;
+  }
+
+  .todoExpired:hover {
+    color: #7bd782;
   }
 </style>

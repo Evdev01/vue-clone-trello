@@ -1,17 +1,19 @@
 <template>
   <div class="todos">
-    <div class="todo" :class="{ todoCheck: !todo.completed || todo.todoOverdue }" v-for="todo in todos"
-         :key="todo.id">
+    <p class="notTodo" v-if="!todos.length">Enter a new task</p>
+    <div class="todo" :class="{ todoCheck: !todo.completed || todo.todoOverdue }" v-for="(todo, index) in todos"
+         :key="index">
       <div class="todo-header" :class="{ todoCheck: !todo.completed }">
         <p>{{ todo.title }}</p>
-        <p style="cursor: pointer" @click="removeTodo(todo.id)">x</p>
+
+        <p style="cursor: pointer" @click="removeTodo(index)">x</p>
       </div>
       <div class="todo-body">
         <p>{{ todo.description }}</p>
       </div>
       <div class="todoInput">
-        <p class="todoCompleted" @click="todoCompleted(todo.id)">В Выполненые</p>
-        <p class="todoExpired" @click="todoExpired(todo.id)">В просроченные</p>
+        <p class="todoCompleted" @click="todoCompleted(todo)">В Выполненые</p>
+        <p class="todoExpired" @click="todoExpired(todo)">В просроченные</p>
       </div>
     </div>
   </div>
@@ -61,6 +63,11 @@ export default {
     transition-delay: 0s !important;
   }
 
+}
+
+.notTodo {
+  font-size: 24px;
+  color: #999999;
 }
 
 .todoInput {

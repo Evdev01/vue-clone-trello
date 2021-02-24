@@ -1,8 +1,8 @@
 <template>
-  <form @submit.prevent="submit">
-    <input type="text" placeholder="title" v-model="title">
-    <input type="text" placeholder="body" v-model="description">
-    <button>Create Post</button>
+  <form @submit.prevent="submit" class="new-todo">
+    <input type="text" placeholder="Title todo" v-model="title">
+    <input type="text" placeholder="Description" v-model="description">
+    <button>Create Todo</button>
     <hr>
   </form>
 </template>
@@ -44,16 +44,18 @@ export default {
         this.title = this.description = ''
       }
     }
-  }
-}
+}}
 </script>
 
-<style lang="scss">
-.new-note {
+<style lang="scss" scoped>
+.new-todo {
+  margin-top: 30px;
   text-align: center;
+  flex-direction: column;
 }
 
 .btnNewNote {
   margin: 30px 0;
 }
+
 </style>

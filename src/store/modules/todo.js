@@ -1,33 +1,48 @@
 export default {
     mutations: {
-        removeTodo(state, id) {
-            state.todos.splice(id, 1)
+        addTodo(state, todo) {
+            state.todos.unshift(todo)
+        },
+        removeTodo(state, index) {
+            state.todos.splice(index, 1)
         },
         removeTodoCompleted(state, index) {
             state.completed.splice(index, 1)
         },
         removeTodoExpired(state, index) {
-            state.inProgress.splice(index, 1)
-        },
-        addTodo(state, todo) {
-            state.todos.unshift(todo)
-            console.log(state.todos)
+            state.expired.splice(index, 1)
         },
         todoCompleted(state, todo) {
             state.completed.unshift(todo)
             state.todos.splice(todo, 1)
         },
         todoExpired(state, todo) {
-            state.inProgress.unshift(todo)
+            state.expired.unshift(todo)
             state.todos.splice(todo, 1)
         },
         todoOverdue(state, todo) {
             todo.todoOverdue = true
-        }
+        },
+        todoCompleteInActive(state, todo) {
+            state.todos.unshift(todo)
+            state.completed.splice(todo, 1)
+        },
+        todoCompleteInExpired(state, todo) {
+            state.expired.unshift(todo)
+            state.completed.splice(todo, 1)
+        },
+        todoExpiredToActive(state, todo) {
+            state.todos.unshift(todo)
+            state.expired.splice(todo, 1)
+        },
+        todoExpiredToCompleted(state, todo) {
+            state.completed.unshift(todo)
+            state.expired.splice(todo, 1)
+        },
     },
     actions: {
-        removeTodo(ctx, id) {
-            ctx.commit('removeTodo', id)
+        removeTodo(ctx, index) {
+            ctx.commit('removeTodo', index)
         },
         removeTodoCompleted(ctx, index) {
             ctx.commit('removeTodoCompleted', index)
@@ -46,11 +61,23 @@ export default {
         },
         todoOverdue(ctx, todo) {
             ctx.commit('todoOverdue', todo)
+        },
+        todoCompleteInActive(ctx, todo) {
+            ctx.commit('todoCompleteInActive', todo)
+        },
+        todoCompleteInExpired(ctx, todo) {
+            ctx.commit('todoCompleteInExpired', todo)
+        },
+        todoExpiredToActive(ctx, todo) {
+            ctx.commit('todoExpiredToActive', todo)
+        },
+        todoExpiredToCompleted(ctx, todo) {
+            ctx.commit('todoExpiredToCompleted', todo)
         }
     },
     state: {
         todos: [],
-        inProgress: [],
+        expired: [],
         completed: []
     },
     getters: {
@@ -61,7 +88,7 @@ export default {
             return state.completed
         },
         todoExpiredList(state) {
-            return state.inProgress
+            return state.expired
         }
     }
 }

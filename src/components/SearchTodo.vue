@@ -50,6 +50,7 @@ svg {
 /* Search */
 .wrapper__search {
   position: relative;
+  margin: 30px 0;
 }
 
 .search {
