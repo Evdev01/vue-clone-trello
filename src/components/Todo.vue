@@ -1,12 +1,12 @@
 <template>
   <div class="todos">
     <p class="notTodo" v-if="!todos.length">Enter a new task</p>
-    <div class="todo" :class="{ todoCheck: !todo.completed || todo.todoOverdue }" v-for="(todo, index) in todos"
-         :key="index">
-      <div class="todo-header" :class="{ todoCheck: !todo.completed }">
+    <div class="todo" :class="{ todoExpired: todo.isTodoExpired }" v-for="todo in todos"
+         :key="todo.id">
+      <div class="todo-header">
         <p>{{ todo.title }}</p>
 
-        <p style="cursor: pointer" @click="removeTodo(index)">x</p>
+        <p style="cursor: pointer" @click="removeTodo(todo.id)">x</p>
       </div>
       <div class="todo-body">
         <p>{{ todo.description }}</p>
@@ -14,19 +14,32 @@
       <div class="todoInput">
         <p class="todoCompleted" @click="todoCompleted(todo)">В Выполненые</p>
         <p class="todoExpired" @click="todoExpired(todo)">В просроченные</p>
+
+        <p class="todo__date_p" @click="setDateChange(todo.id)">Установить дату выполнения? </p>
+        <div class="todo__date">
+          <input type="date" v-show="todo.isSetDate" v-model="todos.date" @click="visibleBtn = !visibleBtn">
+          <p v-show="todo.date.length">Завершить к: {{ todo.date }}</p>
+
+          <button v-show="visibleBtn" @click="setDate(todo.id, todos.date)">Установить дату выполнения</button>
+        </div>
+
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
 
 export default {
   name: "Todo",
   data() {
     return {
       search: this.value,
+      visibleBtn: false,
+      test: false,
+      setDateButton: false,
+      currentDate: new Date().toLocaleString('ru', {day: 'numeric', month: 'long', year: 'numeric'})
     }
   },
   props: {
@@ -35,8 +48,15 @@ export default {
       required: true
     }
   },
+  computed: {
+    ...mapGetters(['todoList'])
+  },
   methods: {
-    ...mapActions(['removeTodo', 'todoCompleted', 'todoExpired', 'todoOverdue'])
+    ...mapActions(['removeTodo', 'todoCompleted', 'todoExpired', 'setDateChange']),
+    setDate(id, date) {
+      this.$emit('setDate', id, date)
+      this.visibleBtn = false
+    },
   }
 
 
@@ -53,7 +73,7 @@ export default {
   transition: all .55s cubic-bezier(.02, .01, .47, 1);
   box-shadow: 0 30px 30px rgba(0, 0, 0, .02);
 
-  &.todoCheck {
+  &.todoExpired {
     background-color: red;
   }
 
@@ -63,6 +83,19 @@ export default {
     transition-delay: 0s !important;
   }
 
+}
+
+.todo__date {
+
+}
+
+.todo__date_p {
+  margin: 20px 0;
+  
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
 }
 
 .notTodo {
@@ -76,8 +109,7 @@ export default {
   flex-direction: column;
 
   & input {
-    padding: 0;
-    margin: 0;
+    margin: 20px 0;
   }
 }
 
