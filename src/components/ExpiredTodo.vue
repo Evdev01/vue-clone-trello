@@ -1,9 +1,9 @@
 <template>
   <div class="todos">
-    <div class="todo" :class="{ todoCheck: !todo.completed }" v-for="(todo, index) in todoExpiredList" :key="index">
+    <div class="todo" :class="{ todoCheck: !todo.completed }" v-for="todo in todoExpiredList" :key="todo.id">
       <div class="todo-header" :class="{ todoCheck: !todo.completed }">
         <p>{{ todo.title }}</p>
-        <p style="cursor: pointer" @click="removeTodoExpired(index)">x</p>
+        <p style="cursor: pointer" @click="removeTodoExpired(todo.id)">x</p>
       </div>
       <div class="todo-body">
         <p>{{ todo.description }}</p>

@@ -19,7 +19,7 @@ export default {
       description: '',
       completed: true,
       todoOverdue: false,
-      todosLocal: []
+      todosLocal: [],
     }
   },
 
@@ -35,11 +35,13 @@ export default {
           title: this.title,
           description: this.description,
           completed: this.completed,
-          todoOverdue: this.todoOverdue
+          todoOverdue: this.todoOverdue,
+          isTodoExpired: false,
+          isSetDate: false,
+          date: ''
         }
         this.addTodo(todo)
 
-        localStorage.setItem('todosLocal', JSON.stringify(this.todoList))
 
         this.title = this.description = ''
       }
