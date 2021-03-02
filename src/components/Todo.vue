@@ -18,7 +18,7 @@
         <p class="todo__date_p" @click="setDateChange(todo.id)">Установить дату выполнения? </p>
         <div class="todo__date">
           <input type="date" v-show="todo.isSetDate" v-model="todos.date" @click="visibleBtn = !visibleBtn">
-          <p v-show="todo.date.length">Завершить к: {{ todo.date }}</p>
+          <p v-show="todo.date">Завершить к: {{ todo.date }}</p>
 
           <button v-show="visibleBtn" @click="setDate(todo.id, todos.date)">Установить дату выполнения</button>
         </div>
@@ -86,7 +86,14 @@ export default {
 }
 
 .todo__date {
+  & button {
+    padding: 12px;
 
+    &:hover {
+      background-color: #cdcccc;
+      cursor: pointer;
+    }
+  }
 }
 
 .todo__date_p {

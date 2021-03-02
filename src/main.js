@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
 import store from './store'
+import 'material-design-icons-iconfont'
+
 
 
 import './assets/scss/main.scss'

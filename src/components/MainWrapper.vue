@@ -22,6 +22,10 @@
 
         </div>
         <div class="main__wrapper-item">
+          <Notification
+              :messages="messages"
+              :timeout="3000"
+          />
           <p class="main__wrapper-title">Просроченные: </p>
 
 
@@ -45,13 +49,16 @@ import Todo from '@/components/Todo'
 import {mapActions, mapGetters} from 'vuex'
 import CompletedTodo from '@/components/CompletedTodo'
 import ExpiredTodo from '@/components/ExpiredTodo'
+import Notification from '@/components/notifications/Notification'
 
 export default {
   name: "MainWrapper",
-  components: {ExpiredTodo, CompletedTodo, Todo, SearchTodo, NewTodo},
+  components: {Notification, ExpiredTodo, CompletedTodo, Todo, SearchTodo, NewTodo},
   data() {
     return {
       search: '',
+      messages: [],
+      timeStamp: Date.now().toLocaleString(),
       currentDate: new Date().toLocaleString('ru', {day: 'numeric', month: 'long', year: 'numeric'})
     }
   },
@@ -66,18 +73,19 @@ export default {
       if (res) {
         this.todoExpiredBackgroundAction(id)
 
-
       } else {
         this.todoNotExpiredBackgroundAction(id)
         this.todoList.map(item => {
           if (item.id === id) {
             item.date = date
             item.isSetDate = false
+            this.messages.unshift(
+                {name: 'Дата была установлена ', icon: 'check_circle', id: this.timeStamp}
+            )
           }
         })
-        window.localStorage.setItem('todo', JSON.stringify(this.todoList))
-
       }
+      window.localStorage.setItem('todo', JSON.stringify(this.todoList))
     }
   },
   computed: {
