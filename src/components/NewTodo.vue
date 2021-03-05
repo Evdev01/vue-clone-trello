@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import {mapGetters, mapMutations} from 'vuex'
+import {mapActions} from 'vuex'
 
 export default {
   name: "NewTodo",
@@ -17,17 +17,15 @@ export default {
       id: null,
       title: '',
       description: '',
-      completed: true,
+      completed: false,
       todoOverdue: false,
-      todosLocal: [],
+
     }
   },
 
-  computed: {
-    ...mapGetters(['todoList'])
-  },
+  computed: {},
   methods: {
-    ...mapMutations(['addTodo']),
+    ...mapActions(['addTodoUserAction']),
     submit() {
       if (this.title.trim() && this.description.trim()) {
         let todo = {
@@ -40,7 +38,7 @@ export default {
           isSetDate: false,
           date: ''
         }
-        this.addTodo(todo)
+        this.addTodoUserAction(todo)
 
 
         this.title = this.description = ''

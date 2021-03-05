@@ -45,14 +45,15 @@ export default {
   props: {
     todos: {
       type: Array,
-      required: true
+      default: () => []
     }
   },
   computed: {
     ...mapGetters(['todoList'])
   },
   methods: {
-    ...mapActions(['removeTodo', 'todoCompleted', 'todoExpired', 'setDateChange']),
+    // ...mapActions(['removeTodo', 'todoCompleted', 'todoExpired', 'setDateChange']),
+    ...mapActions(['removeTodo']),
     setDate(id, date) {
       this.$emit('setDate', id, date)
       this.visibleBtn = false

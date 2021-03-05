@@ -29,13 +29,13 @@
           <p class="main__wrapper-title">Просроченные: </p>
 
 
-          <ExpiredTodo/>
+<!--          <ExpiredTodo/>-->
 
 
         </div>
         <div class="main__wrapper-item">
           <p class="main__wrapper-title">Выполненные: </p>
-          <CompletedTodo/>
+<!--          <CompletedTodo/>-->
         </div>
       </div>
     </div>
@@ -89,24 +89,31 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['todoList']),
+    ...mapGetters(['todoList', 'getCurrentTodoUser', 'isAuthCheck']),
     notesFilter() {
-      let array = this.todoList,
-          search = this.search
-      if (!search) return array
-      search = search.trim().toLowerCase()
-      array = array.filter((item) => {
-        if (item.title.toLowerCase().indexOf(search) !== -1) {
-          return item
-        }
-      })
-      return array
+      if (this.isAuthCheck) {
+        let array = this.getCurrentTodoUser,
+            search = this.search
+        if (!search) return array
+        search = search.trim().toLowerCase()
+        array = array.filter((item) => {
+          if (item.title.toLowerCase().indexOf(search) !== -1) {
+            return item
+          }
+        })
+        return array
+      }
     }
   }
 }
 </script>
 
 <style lang="scss">
+
+.main__wrapper {
+  margin-top: 100px;
+}
+
 .main__wrapper-inner {
   width: 100%;
   display: flex;

@@ -19,12 +19,12 @@ import {mapActions, mapGetters} from 'vuex'
 
 export default {
 name: "ExpiredTodo",
-  methods: {
-    ...mapActions(['todoExpired', 'removeTodoExpired', 'todoExpiredToActive', 'todoExpiredToCompleted'])
-  },
-  computed: {
-    ...mapGetters(['todoExpiredList'])
-  }
+  // methods: {
+  //   ...mapActions(['todoExpired', 'removeTodoExpired', 'todoExpiredToActive', 'todoExpiredToCompleted'])
+  // },
+  // computed: {
+  //   ...mapGetters(['todoExpiredList'])
+  // }
 }
 </script>
 
