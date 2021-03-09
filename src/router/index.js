@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from '@/App'
-import Modal from '@/components/Modal'
+import Registration from '@/components/Registration'
+import Login from '@/components/Login'
 
 Vue.use(VueRouter)
 
@@ -12,9 +13,14 @@ const routes = [
     component: App
   },
   {
-    path: '/registered',
-    name: 'registered',
-    component: Modal,
+    path: '/registration',
+    name: 'registration',
+    component: Registration,
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login,
   },
 ]
 

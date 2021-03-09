@@ -2,66 +2,40 @@
   <div id="app">
     <div class="container">
 
-      <div class="personInfo" v-for="person in getCurrentUserInfo">
-        <p>Hello: <b>{{ person.name }}</b></p>
-      </div>
-
-
-      <!--Registration modal-->
-
-      <button v-show="!isAuthCheck" class="btn btnPrimary" @click="modalRegistration = !modalRegistration">Registration</button>
-
-      <Modal
-          title="Registration"
-          v-show="modalRegistration"
-          @close="modalRegistration = false"
-      >
-
-        <div slot="body">
-          <form @submit.prevent="submitRegistrationForm">
-            <label>Your name:</label>
-            <input type="text" required v-model="userInfo.name">
-
-            <label>Email:</label>
-            <input type="text" required v-model="userInfo.password">
-
-            <label>Password:</label>
-            <input type="text" required v-model="userInfo.email">
-            <button class="btn btnPrimary">Submit!</button>
-          </form>
+      <header>
+        <div class="navbar">
+          <div class="container">
+            <div class="navbar-content">
+              <router-link to="/">
+                <div class="logo">VUE-CLI</div>
+              </router-link>
+              <ul class="navbar-list" v-if="!isAuthCheck">
+                <li class="navbar-item">
+                  <router-link title="Registration" to="/registration" class="navbar-link">
+                    Registration
+                  </router-link>
+                </li>
+                <li class="navbar-item">
+                  <router-link title="Login" to="/login" class="navbar-link">
+                    Login
+                  </router-link>
+                </li>
+              </ul>
+              <div v-show="isAuthCheck" class="personInfo" v-for="person in getCurrentUserInfo">
+                <p>Hello: <b>{{ person.name }}</b></p>
+                <p @click="userExit" class="logoutAccount">Logout</p>
+              </div>
+            </div>
+          </div>
         </div>
-
-      </Modal>
-
+      </header>
 
 
 
-      <!--Login modal-->
-
-      <button v-show="!isAuthCheck" class="btn btnPrimary" @click="modalLogin = !modalLogin">Login</button>
-
-      <Modal
-          title="Login"
-          v-show="modalLogin"
-          @close="modalLogin = false"
-      >
-
-        <div slot="body">
-          <form @submit.prevent="submitLoginForm">
-            <label>Email:</label>
-            <input type="text" required v-model="checkUser.password">
-
-            <label>Password:</label>
-            <input type="text" required v-model="checkUser.email">
-            <button @click="modalLogin = !modalLogin" class="btn btnPrimary">Submit!</button>
-          </form>
-        </div>
-
-      </Modal>
-
-      <button v-show="isAuthCheck" class="btn btnPrimary" @click="userExit">Exit</button>
+      <router-view/>
 
       <MainWrapper/>
+
 
     </div>
 
@@ -80,23 +54,15 @@ export default {
   name: 'App',
   data() {
     return {
-      userInfo: {
-        name: '',
-        email: '',
-        password: '',
-        id: new Date().getTime(),
-        userTodos: {
-          currentTodo: [],
-          expiredTodo: [],
-          completedTodo: [],
-        }
-      },
+      links: [
+        {title: 'Registration', url: '/registration'},
+        {title: 'Login', url: '/login'}
+      ],
       checkUser: {
         email: '',
         password: ''
       },
-      modalRegistration: false,
-      modalLogin: false,
+      modalRegistration: false
     }
   },
   mounted() {
@@ -105,33 +71,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getUserList', 'isAuthCheck', 'getCurrentUserInfo', 'getState']),
+    ...mapGetters(['getUserList', 'isAuthCheck', 'getCurrentUserInfo', 'getState'])
   },
   methods: {
-    ...mapActions(['getNewUser', 'checkUserData', 'userExit']),
-    submitRegistrationForm() {
-
-
-      const newUser = {
-        name: this.userInfo.name,
-        email: this.userInfo.email,
-        password: this.userInfo.password,
-        id: new Date().getTime(),
-        userTodos: {
-          currentTodo: [],
-          expiredTodo: [],
-          completedTodo: [],
-    }
-
-      }
-
-      this.getNewUser(newUser)
-
-      this.userInfo.email = this.userInfo.password = this.userInfo.name = ''
-
-
-      this.modalRegistration = false
-    },
+    ...mapActions(['checkUserData', 'userExit']),
     submitLoginForm() {
 
       this.$store.state.isAuth = true
@@ -144,8 +87,6 @@ export default {
       this.checkUserData(checkPersonDate)
 
       this.checkUser.email = this.checkUser.password = ''
-
-
     }
   },
   components: {
@@ -158,11 +99,22 @@ export default {
 </script>
 
 <style lang="scss">
-  .personInfo {
-    text-align: right;
-    font-size: 20px;
-    & p {
-      font-size: 21px;
+.personInfo {
+  text-align: right;
+  font-size: 20px;
+
+  & p {
+    font-size: 21px;
+  }
+
+  & .logoutAccount {
+    font-size: 18px;
+    color: #444ce0;
+
+    &:hover {
+      cursor: pointer;
+      text-decoration: underline;
     }
   }
+}
 </style>

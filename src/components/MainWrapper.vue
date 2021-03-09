@@ -1,9 +1,6 @@
 <template>
   <div class="main__wrapper">
     <div class="container">
-      <NewTodo
-
-      />
 
       <SearchTodo
           :value="search"
@@ -29,13 +26,13 @@
           <p class="main__wrapper-title">Просроченные: </p>
 
 
-<!--          <ExpiredTodo/>-->
+          <ExpiredTodo/>
 
 
         </div>
         <div class="main__wrapper-item">
           <p class="main__wrapper-title">Выполненные: </p>
-<!--          <CompletedTodo/>-->
+          <CompletedTodo/>
         </div>
       </div>
     </div>
@@ -59,33 +56,70 @@ export default {
       search: '',
       messages: [],
       timeStamp: Date.now().toLocaleString(),
-      currentDate: new Date().toLocaleString('ru', {day: 'numeric', month: 'long', year: 'numeric'})
+      currentDate: new Date().toLocaleString('ru', {day: 'numeric', month: 'long', year: 'numeric'}),
     }
   },
-  methods: {
-    ...mapActions(['todoExpiredBackgroundAction', 'todoNotExpiredBackgroundAction']),
-    setDate(id, date) {
+  mounted: function (index, date, id) {
 
-      let res = new Date(this.todoList.date)
+    this.setDate(index, date, id)
+    {
+
+      this.isDateSet(id)
+
+      let res = new Date(date)
           .toLocaleString('ru', {day: 'numeric', month: 'long', year: 'numeric'}) === this.currentDate
 
 
       if (res) {
-        this.todoExpiredBackgroundAction(id)
-
+        this.getCurrentTodoUser.map(todo => {
+          if (todo.id === id) {
+            todo.isTodoExpired = true
+            todo.date = date
+          }
+        })
+        this.todoExpiredChangeColor(id)
       } else {
-        this.todoNotExpiredBackgroundAction(id)
-        this.todoList.map(item => {
-          if (item.id === id) {
-            item.date = date
-            item.isSetDate = false
+        this.getCurrentTodoUser.map(todo => {
+          if (todo.id === id) {
+            todo.date = date
             this.messages.unshift(
                 {name: 'Дата была установлена ', icon: 'check_circle', id: this.timeStamp}
             )
           }
         })
+        this.todoNotExpiredChangeColor(id)
       }
-      window.localStorage.setItem('todo', JSON.stringify(this.todoList))
+    }
+  },
+  methods: {
+    ...mapActions(['todoExpiredChangeColor', 'saveDateSetByUser', 'isDateSet', 'todoNotExpiredChangeColor']),
+    setDate(index, date, id) {
+
+      this.isDateSet(id)
+
+      let res = new Date(date)
+          .toLocaleString('ru', {day: 'numeric', month: 'long', year: 'numeric'}) === this.currentDate
+
+
+      if (res) {
+        this.getCurrentTodoUser.map(todo => {
+          if (todo.id === id) {
+            todo.isTodoExpired = true
+            todo.date = date
+          }
+        })
+        this.todoExpiredChangeColor(id)
+      } else {
+        this.getCurrentTodoUser.map(todo => {
+          if (todo.id === id) {
+            todo.date = date
+            this.messages.unshift(
+                {name: 'Дата была установлена ', icon: 'check_circle', id: this.timeStamp}
+            )
+          }
+        })
+        this.todoNotExpiredChangeColor(id)
+      }
     }
   },
   computed: {

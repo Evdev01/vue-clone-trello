@@ -1,17 +1,24 @@
 <template>
-  <form @submit.prevent="submit" class="new-todo">
-    <input type="text" placeholder="Title todo" v-model="title">
-    <input type="text" placeholder="Description" v-model="description">
-    <button>Create Todo</button>
-    <hr>
-  </form>
+  <div>
+    <form @submit.prevent="submit" class="new-todo">
+      <input type="text" placeholder="Title todo" v-model="title">
+      <input type="text" placeholder="Description" v-model="description">
+      <button>Create Todo</button>
+      <hr>
+    </form>
+
+
+  </div>
+
 </template>
 
 <script>
 import {mapActions} from 'vuex'
+import Popup from '@/components/popup/Popup'
 
 export default {
   name: "NewTodo",
+  components: {Popup},
   data() {
     return {
       id: null,
@@ -19,13 +26,13 @@ export default {
       description: '',
       completed: false,
       todoOverdue: false,
-
+      isInfoPopupVisible: false
     }
   },
 
   computed: {},
   methods: {
-    ...mapActions(['addTodoUserAction']),
+    ...mapActions(['addTodoUser']),
     submit() {
       if (this.title.trim() && this.description.trim()) {
         let todo = {
@@ -36,15 +43,22 @@ export default {
           todoOverdue: this.todoOverdue,
           isTodoExpired: false,
           isSetDate: false,
+          editModeInputDate: false,
+          editModeTitle: false,
+          editModeDescription: false,
           date: ''
         }
-        this.addTodoUserAction(todo)
+        this.addTodoUser(todo)
 
 
         this.title = this.description = ''
       }
+
+      this.$emit('closePopupNewTodo')
+
     }
-}}
+  }
+}
 </script>
 
 <style lang="scss" scoped>

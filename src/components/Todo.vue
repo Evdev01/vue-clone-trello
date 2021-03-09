@@ -1,44 +1,74 @@
 <template>
   <div class="todos">
     <p class="notTodo" v-if="!todos.length">Enter a new task</p>
-    <div class="todo" :class="{ todoExpired: todo.isTodoExpired }" v-for="todo in todos"
+    <span class="material-icons" @click="showPopupInfo">add</span>
+    <div class="todo" :class="{ todoExpired: todo.isTodoExpired }" v-for="(todo, index) in todos"
          :key="todo.id">
       <div class="todo-header">
-        <p>{{ todo.title }}</p>
+        <p v-if="!todo.editModeTitle" @click="editTitleMode(todo)">{{ todo.title }}</p>
+        <input v-model="newValueTitleTodo" v-if="todo.editModeTitle" :ref="'input_item_' + todo.id"
+               @blur="changeTitleButton(todo)" type="text">
 
-        <p style="cursor: pointer" @click="removeTodo(todo.id)">x</p>
+        <p style="cursor: pointer" @click="removeTodo(index)">x</p>
       </div>
+
       <div class="todo-body">
-        <p>{{ todo.description }}</p>
+        <p v-if="!todo.editModeDescription" @click="editDescriptionMode(todo)">{{ todo.description }}</p>
+        <input v-model="newValueDescriptionTodo" v-if="todo.editModeDescription" :ref="'input_item_' + todo.id"
+               @blur="changeDescriptionButton(todo)" type="text">
       </div>
+
       <div class="todoInput">
         <p class="todoCompleted" @click="todoCompleted(todo)">В Выполненые</p>
         <p class="todoExpired" @click="todoExpired(todo)">В просроченные</p>
 
-        <p class="todo__date_p" @click="setDateChange(todo.id)">Установить дату выполнения? </p>
         <div class="todo__date">
-          <input type="date" v-show="todo.isSetDate" v-model="todos.date" @click="visibleBtn = !visibleBtn">
-          <p v-show="todo.date">Завершить к: {{ todo.date }}</p>
+          <input type="date" v-if="todo.editModeInputDate" v-model="todos.date">
+          <p v-show="todo.date.length">Завершить к: {{ todo.date }}</p>
+          <div @click="editModeSetDate(todo)" v-show="!todo.editModeInputDate" class="material-icons">restore</div>
 
-          <button v-show="visibleBtn" @click="setDate(todo.id, todos.date)">Установить дату выполнения</button>
         </div>
+        <button v-show="todo.editModeInputDate" @click="setDate(index, todos.date, todo.id)">Установить дату
+          выполнения
+        </button>
 
       </div>
     </div>
+
+
+    <Popup
+        v-if="isInfoPopupVisible"
+        @closePopup="closePopup"
+    >
+
+      <NewTodo
+          @closePopupNewTodo="closePopupNewTodo"
+      />
+
+    </Popup>
+
   </div>
 </template>
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
+import Popup from '@/components/popup/Popup'
+import NewTodo from '@/components/NewTodo'
 
 export default {
   name: "Todo",
+  components: {NewTodo, Popup},
   data() {
     return {
+      newValueTitleTodo: '',
+      newValueDescriptionTodo: '',
+      isInfoPopupVisible: false,
       search: this.value,
       visibleBtn: false,
       test: false,
       setDateButton: false,
+      setTime: false,
+      changeTitle: false,
       currentDate: new Date().toLocaleString('ru', {day: 'numeric', month: 'long', year: 'numeric'})
     }
   },
@@ -46,21 +76,93 @@ export default {
     todos: {
       type: Array,
       default: () => []
+    },
+    product: {
+      type: Object,
+      default() {
+        return {}
+      }
     }
   },
   computed: {
-    ...mapGetters(['todoList'])
+    ...mapGetters(['getCurrentTodoUser'])
   },
   methods: {
-    // ...mapActions(['removeTodo', 'todoCompleted', 'todoExpired', 'setDateChange']),
-    ...mapActions(['removeTodo']),
-    setDate(id, date) {
-      this.$emit('setDate', id, date)
+    ...mapActions(['removeTodo', 'todoCompleted', 'todoExpired', 'changeTitleTodo', 'changeDescriptionTodo']),
+    setDate(index, date, id) {
+      this.$emit('setDate', index, date, id)
       this.visibleBtn = false
+
+      const findTodo = this.getCurrentTodoUser.find(t => t.id === id)
+
+      findTodo.editModeInputDate = false
+
+    },
+    editModeSetDate(todo) {
+      const findTodo = this.getCurrentTodoUser.find(t => t.id === todo.id)
+
+      findTodo.editModeInputDate = true
+    },
+    showPopupInfo() {
+      this.isInfoPopupVisible = true
+    },
+    closePopup() {
+      this.isInfoPopupVisible = false
+    },
+    closePopupNewTodo() {
+      this.isInfoPopupVisible = false
+    },
+    editTitleMode: function (todo) {
+      const findTodo = this.getCurrentTodoUser.find(t => t.id === todo.id)
+
+      findTodo.editModeTitle = true
+
+      this.$nextTick(() => {
+        this.$refs['input_item_' + todo.id][0].focus();
+      });
+
+    },
+    editDescriptionMode: function (todo) {
+      const findTodo = this.getCurrentTodoUser.find(t => t.id === todo.id)
+
+      findTodo.editModeDescription = true
+
+      this.$nextTick(() => {
+        this.$refs['input_item_' + todo.id][0].focus();
+      });
+
+    },
+    changeTitleButton(todo) {
+
+      const findTodo = this.getCurrentTodoUser.find(t => t.id === todo.id)
+
+      findTodo.editModeTitle = false
+
+      if (this.newValueTitleTodo.trim()) {
+        let updatedTitle = {
+          id: todo.id,
+          title: this.newValueTitleTodo
+        }
+
+        this.changeTitleTodo(updatedTitle)
+      }
+    },
+    changeDescriptionButton(todo) {
+
+      const findTodo = this.getCurrentTodoUser.find(t => t.id === todo.id)
+
+      findTodo.editModeDescription = false
+
+      if (this.newValueDescriptionTodo.trim()) {
+        let updatedDescription = {
+          id: todo.id,
+          description: this.newValueDescriptionTodo
+        }
+
+        this.changeDescriptionTodo(updatedDescription)
+      }
     },
   }
-
-
 }
 </script>
 
@@ -87,6 +189,12 @@ export default {
 }
 
 .todo__date {
+  text-align: center;
+
+  & .material-icons {
+    margin-left: 12px;
+  }
+
   & button {
     padding: 12px;
 
@@ -99,7 +207,7 @@ export default {
 
 .todo__date_p {
   margin: 20px 0;
-  
+
   &:hover {
     cursor: pointer;
     text-decoration: underline;
@@ -109,6 +217,16 @@ export default {
 .notTodo {
   font-size: 24px;
   color: #999999;
+}
+
+.material-icons {
+  font-size: 32px;
+  color: #999999;
+
+  &:hover {
+    cursor: pointer;
+    color: #000000;
+  }
 }
 
 .todoInput {
