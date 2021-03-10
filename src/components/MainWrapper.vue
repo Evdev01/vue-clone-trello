@@ -8,14 +8,15 @@
       />
 
       <div class="main__wrapper-inner">
+
         <div class="main__wrapper-item">
+            <p class="main__wrapper-title">Активные: </p>
 
-          <p class="main__wrapper-title">Активные: </p>
+            <Todo
+                :todos="notesFilter"
+                @setDate="setDate"
+            />
 
-          <Todo
-              :todos="notesFilter"
-              @setDate="setDate"
-          />
 
         </div>
         <div class="main__wrapper-item">
@@ -23,16 +24,16 @@
               :messages="messages"
               :timeout="3000"
           />
-          <p class="main__wrapper-title">Просроченные: </p>
 
-
-          <ExpiredTodo/>
-
+            <p class="main__wrapper-title">Просроченные: </p>
+            <ExpiredTodo/>
 
         </div>
         <div class="main__wrapper-item">
-          <p class="main__wrapper-title">Выполненные: </p>
-          <CompletedTodo/>
+
+            <p class="main__wrapper-title">Выполненные: </p>
+            <CompletedTodo/>
+
         </div>
       </div>
     </div>
@@ -47,16 +48,17 @@ import {mapActions, mapGetters} from 'vuex'
 import CompletedTodo from '@/components/CompletedTodo'
 import ExpiredTodo from '@/components/ExpiredTodo'
 import Notification from '@/components/notifications/Notification'
+import draggable from 'vuedraggable'
 
 export default {
   name: "MainWrapper",
-  components: {Notification, ExpiredTodo, CompletedTodo, Todo, SearchTodo, NewTodo},
+  components: {Notification, ExpiredTodo, CompletedTodo, Todo, SearchTodo, NewTodo, draggable},
   data() {
     return {
       search: '',
       messages: [],
       timeStamp: Date.now().toLocaleString(),
-      currentDate: new Date().toLocaleString('ru', {day: 'numeric', month: 'long', year: 'numeric'}),
+      currentDate: new Date().toLocaleString('ru', {day: 'numeric', month: 'long', year: 'numeric'})
     }
   },
   mounted: function (index, date, id) {
@@ -123,7 +125,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['todoList', 'getCurrentTodoUser', 'isAuthCheck']),
+    ...mapGetters(['getCurrentTodoUser', 'isAuthCheck', 'getExpiredTodoUser', 'getCompletedTodoUser']),
     notesFilter() {
       if (this.isAuthCheck) {
         let array = this.getCurrentTodoUser,

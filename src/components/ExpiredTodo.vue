@@ -1,38 +1,47 @@
 <template>
   <div class="todos">
-    <div class="todo" :class="{ todoCheck: !todo.completed }" v-for="(todo, index) in getExpiredTodoUser" :key="todo.id">
-      <div class="todo-header" :class="{ todoCheck: !todo.completed }">
 
-        <p v-if="!todo.editModeTitle" @click="editTitleMode(todo)">{{ todo.title }}</p>
-        <input v-model="newValueTitleTodo" v-if="todo.editModeTitle" :ref="'input_item_' + todo.id"
-               @blur="changeTitleButton(todo)" type="text">
+    <draggable v-model="todoExpiredList" group="todo" @end="onEnd">
+      <div class="todo" :class="{ todoCheck: !todo.completed }" v-for="(todo, index) in getExpiredTodoUser"
+           :key="todo.id">
+        <div class="todo-header" :class="{ todoCheck: !todo.completed }">
 
-        <p style="cursor: pointer" @click="removeTodoExpired(index)">x</p>
+          <p v-if="!todo.editModeTitle" @click="editTitleMode(todo)">{{ todo.title }}</p>
+          <input v-model="newValueTitleTodo" v-if="todo.editModeTitle" :ref="'input_item_' + todo.id"
+                 @blur="changeTitleButton(todo)" type="text">
+
+          <p style="cursor: pointer" @click="removeTodoExpired(index)">x</p>
+        </div>
+        <div class="todo-body">
+          <p v-if="!todo.editModeDescription" @click="editDescriptionMode(todo)">{{ todo.description }}</p>
+          <input v-model="newValueDescriptionTodo" v-if="todo.editModeDescription" :ref="'input_item_' + todo.id"
+                 @blur="changeDescriptionButton(todo)" type="text">
+        </div>
       </div>
-      <div class="todo-body">
-        <p v-if="!todo.editModeDescription" @click="editDescriptionMode(todo)">{{ todo.description }}</p>
-        <input v-model="newValueDescriptionTodo" v-if="todo.editModeDescription" :ref="'input_item_' + todo.id"
-               @blur="changeDescriptionButton(todo)" type="text">
-      </div>
-      <p class="todoCompleted" @click="todoExpiredInActive(todo)">В Активные</p>
-      <p class="todoExpired" @click="todoExpiredInCompleted(todo)">В выполненые</p>
-    </div>
+    </draggable>
+
   </div>
 </template>
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
+import draggable from 'vuedraggable'
 
 export default {
-name: "ExpiredTodo",
+  name: "ExpiredTodo",
+  components: {draggable},
   data() {
-  return {
-    newValueTitleTodo: '',
-    newValueDescriptionTodo: '',
-  }
+    return {
+      newValueTitleTodo: '',
+      newValueDescriptionTodo: ''
+    }
   },
   methods: {
-    ...mapActions(['todoExpired', 'removeTodoExpired', 'todoExpiredInActive', 'todoExpiredInCompleted', 'changeTitleExpiredTodo', 'changeDescriptionExpiredTodo']),
+    ...mapActions(['todoExpired', 'removeTodoExpired',
+      'changeTitleExpiredTodo', 'changeDescriptionExpiredTodo', 'updateLocalList']),
+    onEnd() {
+      this.updateLocalList()
+    },
     editTitleMode: function (todo) {
       const findTodo = this.getExpiredTodoUser.find(t => t.id === todo.id)
 
@@ -81,23 +90,32 @@ name: "ExpiredTodo",
 
         this.changeDescriptionExpiredTodo(updatedDescription)
       }
-    },
+    }
   },
   computed: {
-    ...mapGetters(['getExpiredTodoUser'])
+    ...mapGetters(['getExpiredTodoUser']),
+    todoExpiredList: {
+      get() {
+        return this.getExpiredTodoUser
+      },
+      set(value) {
+        this.$store.dispatch("updateExpiredTodo", value);
+      }
+    }
   }
 }
 </script>
 
 <style scoped>
-  .todo {
-    background-color: #ff0000;
-  }
-  .todoCompleted:hover {
-    color: #ffffff;
-  }
+.todo {
+  background-color: #ff0000;
+}
 
-  .todoExpired:hover {
-    color: #7bd782;
-  }
+.todoCompleted:hover {
+  color: #ffffff;
+}
+
+.todoExpired:hover {
+  color: #7bd782;
+}
 </style>

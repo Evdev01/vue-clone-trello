@@ -1,33 +1,35 @@
 <template>
   <div class="todos">
-    <div class="todo" :class="{ todoCheck: !todo.completed }" v-for="(todo, index) in getCompletedTodoUser"
-         :key="todo.id">
-      <div class="todo-header" :class="{ todoCheck: !todo.completed }">
+    <draggable v-model="todoCompleteList" group="todo" @end="onEnd">
+      <div class="todo" :class="{ todoCheck: !todo.completed }" v-for="(todo, index) in getCompletedTodoUser"
+           :key="todo.id">
+        <div class="todo-header" :class="{ todoCheck: !todo.completed }">
 
-        <p v-if="!todo.editModeTitle" @click="editTitleMode(todo)">{{ todo.title }}</p>
-        <input v-model="newValueTitleTodo" v-if="todo.editModeTitle" :ref="'input_item_' + todo.id"
-               @blur="changeTitleButton(todo)" type="text">
+          <p v-if="!todo.editModeTitle" @click="editTitleMode(todo)">{{ todo.title }}</p>
+          <input v-model="newValueTitleTodo" v-if="todo.editModeTitle" :ref="'input_item_' + todo.id"
+                 @blur="changeTitleButton(todo)" type="text">
 
-        <p style="cursor: pointer" @click="removeTodoCompleted(index)">x</p>
+          <p style="cursor: pointer" @click="removeTodoCompleted(index)">x</p>
+        </div>
+        <div class="todo-body">
+
+          <p v-if="!todo.editModeDescription" @click="editDescriptionMode(todo)">{{ todo.description }}</p>
+          <input v-model="newValueDescriptionTodo" v-if="todo.editModeDescription" :ref="'input_item_' + todo.id"
+                 @blur="changeDescriptionButton(todo)" type="text">
+
+        </div>
       </div>
-      <div class="todo-body">
-
-        <p v-if="!todo.editModeDescription" @click="editDescriptionMode(todo)">{{ todo.description }}</p>
-        <input v-model="newValueDescriptionTodo" v-if="todo.editModeDescription" :ref="'input_item_' + todo.id"
-               @blur="changeDescriptionButton(todo)" type="text">
-
-      </div>
-      <p class="todoCompleted" @click="todoCompleteInActive(todo)">В Активные</p>
-      <p class="todoExpired" @click="todoCompleteInExpired(todo)">В просроченные</p>
-    </div>
+    </draggable>
   </div>
 </template>
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
+import draggable from 'vuedraggable'
 
 export default {
   name: "CompletedTodo",
+  components: {draggable},
   data() {
     return {
       newValueTitleTodo: '',
@@ -35,7 +37,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['removeTodoCompleted', 'todoCompleteInActive', 'todoCompleteInExpired', 'changeTitleActiveTodo', 'changeDescriptionActiveTodo']),
+    ...mapActions(['removeTodoCompleted', 'changeTitleActiveTodo', 'changeDescriptionActiveTodo', 'updateLocalList']),
+    onEnd() {
+      this.updateLocalList()
+    },
     editTitleMode: function (todo) {
       const findTodo = this.getCompletedTodoUser.find(t => t.id === todo.id)
 
@@ -87,7 +92,15 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['getCompletedTodoUser'])
+    ...mapGetters(['getCompletedTodoUser']),
+    todoCompleteList: {
+      get() {
+        return this.getCompletedTodoUser
+      },
+      set(value) {
+        this.$store.dispatch("updateCompleteTodo", value);
+      }
+    }
   }
 }
 </script>

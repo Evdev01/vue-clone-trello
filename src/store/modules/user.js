@@ -71,66 +71,8 @@ export default {
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList)) // saving a new user to the list || update user data in usersList
         },
-        todoExpired(state, todo) {
-
-            state.currentUserInfo[0].userTodos.expiredTodo.unshift(todo)
-            state.currentUserInfo[0].userTodos.currentTodo.splice(todo, 1)
-
-
-            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
-            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList)) // saving a new user to the list || update user data in usersList
-        },
-        todoCompleted(state, todo) {
-
-
-            state.currentUserInfo[0].userTodos.completedTodo.unshift(todo)
-            state.currentUserInfo[0].userTodos.currentTodo.splice(todo, 1)
-
-            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
-            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList)) // saving a new user to the list || update user data in usersList
-        },
         removeTodoExpired(state, index) {
             state.currentUserInfo[0].userTodos.expiredTodo.splice(index, 1)
-
-            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
-            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList)) // saving a new user to the list || update user data in usersList
-        },
-        todoExpiredInActive(state, todo) {
-
-            state.currentUserInfo[0].userTodos.currentTodo.unshift(todo)
-            state.currentUserInfo[0].userTodos.expiredTodo.splice(todo, 1)
-            todo.isTodoExpired = false
-            todo.date = ''
-            todo.isSetDate = false
-
-            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
-            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList)) // saving a new user to the list || update user data in usersList
-
-        },
-        todoExpiredInCompleted(state, todo) {
-            state.currentUserInfo[0].userTodos.completedTodo.unshift(todo)
-            state.currentUserInfo[0].userTodos.expiredTodo.splice(todo, 1)
-
-            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
-            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList)) // saving a new user to the list || update user data in usersList
-
-        },
-        removeTodoCompleted(state, index) {
-            state.currentUserInfo[0].userTodos.completedTodo.splice(index, 1)
-
-            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
-            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList)) // saving a new user to the list || update user data in usersList
-        },
-        todoCompleteInActive(state, todo) {
-            state.currentUserInfo[0].userTodos.currentTodo.unshift(todo)
-            state.currentUserInfo[0].userTodos.completedTodo.splice(todo, 1)
-
-            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
-            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList)) // saving a new user to the list || update user data in usersList
-        },
-        todoCompleteInExpired(state, todo) {
-            state.currentUserInfo[0].userTodos.expiredTodo.unshift(todo)
-            state.currentUserInfo[0].userTodos.completedTodo.splice(todo, 1)
 
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList)) // saving a new user to the list || update user data in usersList
@@ -141,6 +83,12 @@ export default {
                     item.isSetDate = !item.isSetDate
                 }
             })
+        },
+        removeTodoCompleted(state, index) {
+            state.currentUserInfo[0].userTodos.completedTodo.splice(index, 1)
+
+            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
+            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList)) // saving a new user to the list || update user data in usersList
         },
         todoExpiredChangeColor(state, id) {
 
@@ -243,6 +191,37 @@ export default {
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList)) // saving a new user to the list || update user data in usersList
         },
+        updateCurrentTodo: (state, payload) => {
+            state.currentUserInfo[0].userTodos.currentTodo = payload;
+        },
+        updateExpiredTodo: (state, payload) => {
+            state.currentUserInfo[0].userTodos.expiredTodo = payload;
+        },
+        updateCompleteTodo: (state, payload) => {
+            state.currentUserInfo[0].userTodos.completedTodo = payload;
+        },
+        updateLocalList (state) {
+            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
+            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
+        },
+        editModeSateDateAction (state, todo) {
+
+            const findTodo = state.currentUserInfo[0].userTodos.currentTodo.find(t => t.id === todo.id)
+
+            findTodo.editModeInputDate = true
+
+            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
+            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
+        },
+        offEditModeSateDateAction (state, id) {
+
+            const findTodo = state.currentUserInfo[0].userTodos.currentTodo.find(t => t.id === id)
+
+            findTodo.editModeInputDate = false
+
+            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
+            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
+        }
     },
     actions: {
         getNewUser(ctx, newUser) {
@@ -315,7 +294,24 @@ export default {
         changeDescriptionActiveTodo(ctx, updatedDescription) {
             ctx.commit('changeDescriptionActiveTodo', updatedDescription)
         },
-
+        editModeSateDateAction(ctx, todo) {
+            ctx.commit('editModeSateDateAction', todo)
+        },
+        offEditModeSateDateAction(ctx, id) {
+            ctx.commit('offEditModeSateDateAction', id)
+        },
+        updateCurrentTodo: ({commit}, payload) => {
+            commit("updateCurrentTodo", payload);
+        },
+        updateExpiredTodo: ({commit}, payload) => {
+            commit("updateExpiredTodo", payload);
+        },
+        updateCompleteTodo: ({commit}, payload) => {
+            commit("updateCompleteTodo", payload);
+        },
+        updateLocalList: ({commit}, payload) => {
+            commit("updateLocalList", payload);
+        }
     },
     state: {
         isAuth: isAuthSave ? JSON.parse(isAuthSave) : false,

@@ -78,6 +78,8 @@ export default {
 
       this.$router.push('login')
 
+      console.log(newUser)
+
     }
   }
 }

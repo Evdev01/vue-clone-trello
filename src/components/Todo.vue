@@ -2,38 +2,43 @@
   <div class="todos">
     <p class="notTodo" v-if="!todos.length">Enter a new task</p>
     <span class="material-icons" @click="showPopupInfo">add</span>
-    <div class="todo" :class="{ todoExpired: todo.isTodoExpired }" v-for="(todo, index) in todos"
-         :key="todo.id">
-      <div class="todo-header">
-        <p v-if="!todo.editModeTitle" @click="editTitleMode(todo)">{{ todo.title }}</p>
-        <input v-model="newValueTitleTodo" v-if="todo.editModeTitle" :ref="'input_item_' + todo.id"
-               @blur="changeTitleButton(todo)" type="text">
 
-        <p style="cursor: pointer" @click="removeTodo(index)">x</p>
-      </div>
+    <draggable v-model="todoCurrent" group="todo" @end="onEnd">
 
-      <div class="todo-body">
-        <p v-if="!todo.editModeDescription" @click="editDescriptionMode(todo)">{{ todo.description }}</p>
-        <input v-model="newValueDescriptionTodo" v-if="todo.editModeDescription" :ref="'input_item_' + todo.id"
-               @blur="changeDescriptionButton(todo)" type="text">
-      </div>
+      <div class="todo" :class="{ todoExpired: todo.isTodoExpired }" v-for="(todo, index) in todos"
+           :key="todo.id">
 
-      <div class="todoInput">
-        <p class="todoCompleted" @click="todoCompleted(todo)">В Выполненые</p>
-        <p class="todoExpired" @click="todoExpired(todo)">В просроченные</p>
+        <div class="todo-header">
+          <p v-if="!todo.editModeTitle" @click="editTitleMode(todo)">{{ todo.title }}</p>
+          <input v-model="newValueTitleTodo" v-if="todo.editModeTitle" :ref="'input_item_' + todo.id"
+                 @blur="changeTitleButton(todo)" type="text">
 
-        <div class="todo__date">
-          <input type="date" v-if="todo.editModeInputDate" v-model="todos.date">
-          <p v-show="todo.date.length">Завершить к: {{ todo.date }}</p>
-          <div @click="editModeSetDate(todo)" v-show="!todo.editModeInputDate" class="material-icons">restore</div>
+          <p style="cursor: pointer" @click="removeTodo(index)">x</p>
+        </div>
+
+        <div class="todo-body">
+          <p v-if="!todo.editModeDescription" @click="editDescriptionMode(todo)">{{ todo.description }}</p>
+          <input v-model="newValueDescriptionTodo" v-if="todo.editModeDescription" :ref="'input_item_' + todo.id"
+                 @blur="changeDescriptionButton(todo)" type="text">
+        </div>
+
+        <div class="todoInput">
+
+          <div class="todo__date">
+            <input type="date" v-if="todo.editModeInputDate" v-model="todos.date">
+            <p v-show="todo.date.length">Завершить к: {{ todo.date }}</p>
+            <div @click="editModeSateDateAction(todo)" v-show="!todo.editModeInputDate" class="material-icons">restore</div>
+
+          </div>
+          <button v-show="todo.editModeInputDate" @click="setDate(index, todos.date, todo.id)">Установить дату
+            выполнения
+          </button>
 
         </div>
-        <button v-show="todo.editModeInputDate" @click="setDate(index, todos.date, todo.id)">Установить дату
-          выполнения
-        </button>
-
       </div>
-    </div>
+
+    </draggable>
+
 
 
     <Popup
@@ -54,10 +59,11 @@
 import {mapActions, mapGetters} from 'vuex'
 import Popup from '@/components/popup/Popup'
 import NewTodo from '@/components/NewTodo'
+import draggable from 'vuedraggable'
 
 export default {
   name: "Todo",
-  components: {NewTodo, Popup},
+  components: {NewTodo, Popup, draggable},
   data() {
     return {
       newValueTitleTodo: '',
@@ -85,23 +91,27 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getCurrentTodoUser'])
+    ...mapGetters(['getCurrentTodoUser']),
+    todoCurrent: {
+      get() {
+        return this.getCurrentTodoUser
+      },
+      set(value) {
+        this.$store.dispatch("updateCurrentTodo", value);
+      }
+    },
   },
   methods: {
-    ...mapActions(['removeTodo', 'todoCompleted', 'todoExpired', 'changeTitleTodo', 'changeDescriptionTodo']),
+    ...mapActions(['removeTodo', 'changeTitleTodo', 'changeDescriptionTodo', 'updateLocalList', 'editModeSateDateAction', 'offEditModeSateDateAction']),
+    onEnd() {
+      this.updateLocalList()
+    },
     setDate(index, date, id) {
       this.$emit('setDate', index, date, id)
       this.visibleBtn = false
 
-      const findTodo = this.getCurrentTodoUser.find(t => t.id === id)
+      this.offEditModeSateDateAction(id)
 
-      findTodo.editModeInputDate = false
-
-    },
-    editModeSetDate(todo) {
-      const findTodo = this.getCurrentTodoUser.find(t => t.id === todo.id)
-
-      findTodo.editModeInputDate = true
     },
     showPopupInfo() {
       this.isInfoPopupVisible = true
@@ -184,6 +194,7 @@ export default {
     box-shadow: 0 30px 30px rgba(0, 0, 0, .04);
     transform: translate(0, -6px);
     transition-delay: 0s !important;
+    cursor: move;
   }
 
 }
