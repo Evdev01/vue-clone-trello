@@ -61,6 +61,8 @@ export default {
         email: this.userInfo.email,
         password: this.userInfo.password,
         id: new Date().getTime(),
+        openSearchTodoInput: false,
+        locale: 'ru-RU',
         date: '',
         userTodos: {
           currentTodo: [],

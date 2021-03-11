@@ -3,6 +3,7 @@
     <div class="container">
 
       <SearchTodo
+          v-if="isSearchTodoInputOpen"
           :value="search"
           @search="search = $event"
       />
@@ -10,7 +11,7 @@
       <div class="main__wrapper-inner">
 
         <div class="main__wrapper-item">
-            <p class="main__wrapper-title">Активные: </p>
+            <p class="main__wrapper-title">{{ 'CategoryTodoActive' | localize }}: </p>
 
             <Todo
                 :todos="notesFilter"
@@ -25,18 +26,19 @@
               :timeout="3000"
           />
 
-            <p class="main__wrapper-title">Просроченные: </p>
+            <p class="main__wrapper-title">{{ 'CategoryTodoExpired' | localize }}: </p>
             <ExpiredTodo/>
 
         </div>
         <div class="main__wrapper-item">
 
-            <p class="main__wrapper-title">Выполненные: </p>
+            <p class="main__wrapper-title">{{ 'CategoryTodoComplete' | localize}}:  </p>
             <CompletedTodo/>
 
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -60,6 +62,9 @@ export default {
       timeStamp: Date.now().toLocaleString(),
       currentDate: new Date().toLocaleString('ru', {day: 'numeric', month: 'long', year: 'numeric'})
     }
+  },
+  props: {
+    openSearchTodoInput:{}
   },
   mounted: function (index, date, id) {
 
@@ -125,7 +130,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getCurrentTodoUser', 'isAuthCheck', 'getExpiredTodoUser', 'getCompletedTodoUser']),
+    ...mapGetters(['getCurrentTodoUser', 'isAuthCheck', 'getExpiredTodoUser', 'getCompletedTodoUser', 'isSearchTodoInputOpen']),
     notesFilter() {
       if (this.isAuthCheck) {
         let array = this.getCurrentTodoUser,
@@ -155,7 +160,7 @@ export default {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  margin: 0 -15px;
+  margin: 170px -15px 0 -15px;
 }
 
 .main__wrapper-item {
@@ -168,6 +173,7 @@ export default {
 .main__wrapper-title {
   margin-bottom: 20px;
 }
+
 </style>
 
 

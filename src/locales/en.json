@@ -1,0 +1,10 @@
+{
+  "UserGreeting": "Hello",
+  "UserLogout": "Logout",
+  "CategoryTodoActive": "Active",
+  "CategoryTodoExpired": "Expired",
+  "TitleNewTodo": "Title todo",
+  "DescriptionNewTodo": "Description",
+  "CategoryTodoComplete": "Completed",
+  "AddNewTask": "Enter a new task"
+}

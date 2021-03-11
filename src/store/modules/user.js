@@ -4,6 +4,7 @@ export const isAuthSave = window.localStorage.getItem('isAuthSave')
 
 export default {
     mutations: {
+
         addTodoUser(state, todo) {
 
             state.currentUserInfo[0].userTodos.currentTodo.unshift(todo)
@@ -221,6 +222,26 @@ export default {
 
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
+        },
+        openSearchTodoInput (state) {
+
+            state.currentUserInfo[0].openSearchTodoInput = !state.currentUserInfo[0].openSearchTodoInput
+
+            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
+            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
+        },
+        updateInfoUser (state, newInfo) {
+
+            const findUser = state.currentUserInfo[0]
+
+            findUser.locale = newInfo.locale
+
+            console.log(findUser)
+            console.log(newInfo.locale)
+            console.log('update',findUser)
+
+            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
+            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
         }
     },
     actions: {
@@ -311,6 +332,12 @@ export default {
         },
         updateLocalList: ({commit}, payload) => {
             commit("updateLocalList", payload);
+        },
+        openSearchTodoInput: ({commit}) => {
+            commit("openSearchTodoInput");
+        },
+        updateInfoUser: ({commit}, newInfo) => {
+            commit("updateInfoUser", newInfo);
         }
     },
     state: {
@@ -349,8 +376,11 @@ export default {
         getCompletedTodoUser(state) {
             return state.currentUserInfo[0].userTodos.completedTodo
         },
-        getState(state) {
-            return state
-        }
+        isSearchTodoInputOpen(state) {
+            return state.currentUserInfo[0].openSearchTodoInput
+        },
+        getLocaleUser(state) {
+            return state.currentUserInfo[0].locale
+        },
     }
 }

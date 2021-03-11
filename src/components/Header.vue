@@ -37,6 +37,14 @@ export default {
 </script>
 
 <style lang="scss">
+
+header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 11;
+}
+
 .navbar-link {
   &.router-link-exact-active {
     color: #5247e7;

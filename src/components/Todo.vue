@@ -1,6 +1,6 @@
 <template>
   <div class="todos">
-    <p class="notTodo" v-if="!todos.length">Enter a new task</p>
+    <p class="notTodo" v-if="!todos.length">{{ 'AddNewTask' | localize }}</p>
     <span class="material-icons" @click="showPopupInfo">add</span>
 
     <draggable v-model="todoCurrent" group="todo" @end="onEnd">
@@ -9,7 +9,7 @@
            :key="todo.id">
 
         <div class="todo-header">
-          <p v-if="!todo.editModeTitle" @click="editTitleMode(todo)">{{ todo.title }}</p>
+          <p v-if="!todo.editModeTitle" @click="editTitleMode(todo)" class="todo_title">{{ todo.title }}</p>
           <input v-model="newValueTitleTodo" v-if="todo.editModeTitle" :ref="'input_item_' + todo.id"
                  @blur="changeTitleButton(todo)" type="text">
 
@@ -17,7 +17,7 @@
         </div>
 
         <div class="todo-body">
-          <p v-if="!todo.editModeDescription" @click="editDescriptionMode(todo)">{{ todo.description }}</p>
+          <p v-if="!todo.editModeDescription" @click="editDescriptionMode(todo)" class="todo_description">{{ todo.description }}</p>
           <input v-model="newValueDescriptionTodo" v-if="todo.editModeDescription" :ref="'input_item_' + todo.id"
                  @blur="changeDescriptionButton(todo)" type="text">
         </div>
@@ -199,12 +199,14 @@ export default {
 
 }
 
+.todos {
+  & span  {
+    font-size: 30px;
+  }
+}
+
 .todo__date {
   text-align: center;
-
-  & .material-icons {
-    margin-left: 12px;
-  }
 
   & button {
     padding: 12px;
@@ -231,7 +233,6 @@ export default {
 }
 
 .material-icons {
-  font-size: 32px;
   color: #999999;
 
   &:hover {
@@ -307,6 +308,18 @@ export default {
     &.full {
       justify-content: center;
     }
+  }
+}
+
+.todo_title {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.todo_description {
+  &:hover {
+    cursor: pointer;
   }
 }
 </style>

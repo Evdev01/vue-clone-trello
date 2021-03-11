@@ -1,0 +1,10 @@
+{
+  "UserGreeting": "Приветствую",
+  "UserLogout": "Выйти",
+  "CategoryTodoActive": "Активные",
+  "CategoryTodoExpired": "Просроченные",
+  "CategoryTodoComplete": "Выполненые",
+  "TitleNewTodo": "Заголовок",
+  "DescriptionNewTodo": "Описание",
+  "AddNewTask": "Введите новую задачу"
+}
