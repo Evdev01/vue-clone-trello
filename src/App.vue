@@ -40,6 +40,17 @@
                   <p @click="userExit" class="logoutAccount">{{ 'UserLogout' | localize }}</p>
                 </div>
                 <div @click="openSearchTodoInput" class="material-icons">search</div>
+
+                <draggable v-model="todoDeletedList" group="todo" @end="onEnd">
+                  <div class="basket_wrapper">
+                      <router-link class="material-icons" to="/basket">delete_forever</router-link>
+                    <div class="basket_count_background" v-if="todoDeletedList.length">
+                      <div class="basket_count">{{ getDeletedTodoUser.length }}</div>
+                    </div>
+                  </div>
+                </draggable>
+
+
                 <div>
                   <label class="switch">
                     <input type="checkbox" v-model=" isRuLocale" @change="sendInfoUser">
@@ -55,24 +66,21 @@
         </div>
       </header>
 
-
       <router-view/>
-
-      <MainWrapper v-if="isAuthCheck"/>
-
 
     </div>
 
   </div>
-</template>
+</template>p
 
 <script>
 
 import MainWrapper from '@/components/MainWrapper'
 import NewTodo from '@/components/NewTodo'
 import Header from '@/components/Header'
-import Modal from '@/components/Modal'
 import {mapActions, mapGetters} from 'vuex'
+import draggable from 'vuedraggable'
+
 
 export default {
   name: 'App',
@@ -99,10 +107,24 @@ export default {
     this.isRuLocale = this.getCurrentUserInfo[0].locale === 'ru-RU'
   },
   computed: {
-    ...mapGetters(['getUserList', 'isAuthCheck', 'getCurrentUserInfo'])
+    ...mapGetters(['getUserList', 'isAuthCheck', 'getCurrentUserInfo', 'getDeletedTodoUser']),
+    todoDeletedList: {
+      get() {
+        return this.getDeletedTodoUser
+      },
+      set(value) {
+        this.$store.dispatch("getDeletedTodos", value);
+      }
+    }
   },
   methods: {
     ...mapActions(['checkUserData', 'userExit', 'openSearchTodoInput', 'updateInfoUser']),
+    openBasket() {
+      this.$router.push('basket')
+    },
+    onEnd() {
+      this.updateLocalList()
+    },
     sendInfoUser() {
       const idCurrentUser = this.getCurrentUserInfo[0].id
 
@@ -128,15 +150,42 @@ export default {
     }
   },
   components: {
-    Modal,
     Header,
     NewTodo,
-    MainWrapper
+    MainWrapper,
+    draggable
   }
 }
 </script>
 
 <style lang="scss" scoped>
+
+.basket_wrapper {
+  position: relative;
+
+  & .material-icons {
+    font-size: 44px;
+  }
+}
+
+.basket_count_background {
+  background: #ff0000;
+  border-radius: 50%;
+  position: absolute;
+  top: 20px;
+  left: 67px;
+  z-index: 1;
+}
+
+.basket_count {
+  font-size: 16px;
+  padding: 1px 4px 1px 4px;
+}
+
+
+.not_visible {
+  display: none;
+}
 
 .starting_greeting {
   position: absolute;

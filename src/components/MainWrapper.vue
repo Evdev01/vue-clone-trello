@@ -1,5 +1,5 @@
 <template>
-  <div class="main__wrapper">
+  <div class="main__wrapper" v-if="isAuthCheck">
     <div class="container">
 
       <SearchTodo

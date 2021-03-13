@@ -6,5 +6,13 @@
   "TitleNewTodo": "Title todo",
   "DescriptionNewTodo": "Description",
   "CategoryTodoComplete": "Completed",
-  "AddNewTask": "Enter a new task"
+  "AddNewTask": "Enter a new task",
+  "AddNewTodo": "Create todo",
+  "RegistrationName": "Your name",
+  "RegistrationErrorFieldIsRequired": "Field is required",
+  "RegistrationErrorFieldNameIsMinLength": "Name must have at least ",
+  "RegistrationErrorFieldEmailIsMinLength": "Email must have at least ",
+  "RegistrationErrorFieldEmailNotCorrect": "Email is not correct!",
+  "RegistrationErrorFieldPasswordNotCorrect": "Password is not correct!"
+
 }

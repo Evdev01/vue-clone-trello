@@ -5,7 +5,7 @@
 
     <draggable v-model="todoCurrent" group="todo" @end="onEnd">
 
-      <div class="todo" :class="{ todoExpired: todo.isTodoExpired }" v-for="(todo, index) in todos"
+      <div class="todo" v-for="(todo, index) in todos"
            :key="todo.id">
 
         <div class="todo-header">
@@ -28,6 +28,7 @@
             <input type="date" v-if="todo.editModeInputDate" v-model="todos.date">
             <p v-show="todo.date.length">Завершить к: {{ todo.date }}</p>
             <div @click="editModeSateDateAction(todo)" v-show="!todo.editModeInputDate" class="material-icons">restore</div>
+            <div v-show="todo.date.length" class="material-icons" @click="resetDateSetting(todo)">close</div>
 
           </div>
           <button v-show="todo.editModeInputDate" @click="setDate(index, todos.date, todo.id)">Установить дату
@@ -102,7 +103,8 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['removeTodo', 'changeTitleTodo', 'changeDescriptionTodo', 'updateLocalList', 'editModeSateDateAction', 'offEditModeSateDateAction']),
+    ...mapActions(['removeTodo', 'changeTitleTodo', 'changeDescriptionTodo',
+      'updateLocalList', 'editModeSateDateAction', 'offEditModeSateDateAction', 'resetDateSetting']),
     onEnd() {
       this.updateLocalList()
     },
@@ -318,6 +320,9 @@ export default {
 }
 
 .todo_description {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
   &:hover {
     cursor: pointer;
   }

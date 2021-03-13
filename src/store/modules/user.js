@@ -91,6 +91,12 @@ export default {
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList)) // saving a new user to the list || update user data in usersList
         },
+        removeTodoFromBasket(state, index) {
+            state.currentUserInfo[0].userTodos.deletedTodo.splice(index, 1)
+
+            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
+            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList)) // saving a new user to the list || update user data in usersList
+        },
         todoExpiredChangeColor(state, id) {
 
             state.currentUserInfo[0].userTodos.currentTodo.map(todo => {
@@ -195,6 +201,15 @@ export default {
         updateCurrentTodo: (state, payload) => {
             state.currentUserInfo[0].userTodos.currentTodo = payload;
         },
+        getDeletedTodos: (state, payload) => {
+            state.currentUserInfo[0].userTodos.deletedTodo = payload;
+        },
+        returnTodoInActive: (state, todo) => {
+
+            state.currentUserInfo[0].userTodos.deletedTodo.splice(todo, 1);
+            state.currentUserInfo[0].userTodos.currentTodo.unshift(todo)
+
+        },
         updateExpiredTodo: (state, payload) => {
             state.currentUserInfo[0].userTodos.expiredTodo = payload;
         },
@@ -210,6 +225,20 @@ export default {
             const findTodo = state.currentUserInfo[0].userTodos.currentTodo.find(t => t.id === todo.id)
 
             findTodo.editModeInputDate = true
+
+            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
+            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
+        },
+        resetDateSetting (state, todo) {
+
+            console.log(todo)
+
+            const findTodo = state.currentUserInfo[0].userTodos.currentTodo.find(t => t.id === todo.id)
+
+            console.log(findTodo)
+
+            findTodo.isDateSet = false
+            findTodo.date = ''
 
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
@@ -242,7 +271,8 @@ export default {
 
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
-        }
+        },
+
     },
     actions: {
         getNewUser(ctx, newUser) {
@@ -278,6 +308,9 @@ export default {
         },
         removeTodoCompleted(ctx, index) {
             ctx.commit('removeTodoCompleted', index)
+        },
+        removeTodoFromBasket(ctx, index) {
+            ctx.commit('removeTodoFromBasket', index)
         },
         todoCompleteInActive(ctx, todo) {
             ctx.commit('todoCompleteInActive', todo)
@@ -338,7 +371,16 @@ export default {
         },
         updateInfoUser: ({commit}, newInfo) => {
             commit("updateInfoUser", newInfo);
-        }
+        },
+        resetDateSetting: ({commit}, todo) => {
+            commit("resetDateSetting", todo);
+        },
+        getDeletedTodos: ({commit}, todo) => {
+            commit("getDeletedTodos", todo);
+        },
+        returnTodoInActive: ({commit}, todo) => {
+            commit("returnTodoInActive", todo);
+        },
     },
     state: {
         isAuth: isAuthSave ? JSON.parse(isAuthSave) : false,
@@ -369,6 +411,9 @@ export default {
         },
         getCurrentTodoUser(state) {
             return state.currentUserInfo[0].userTodos.currentTodo
+        },
+        getDeletedTodoUser(state) {
+            return state.currentUserInfo[0].userTodos.deletedTodo
         },
         getExpiredTodoUser(state) {
             return state.currentUserInfo[0].userTodos.expiredTodo

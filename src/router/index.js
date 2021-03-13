@@ -1,26 +1,32 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import App from '@/App'
-import Registration from '@/components/Registration'
 import Login from '@/components/Login'
+import RegistrationModalValidate from '@/components/validateForm/RegistrationModalValidate'
+import DeletedTodo from '@/components/DeletedTodo'
+import MainWrapper from '@/components/MainWrapper'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/home',
     name: 'home',
-    component: App
+    component: MainWrapper
   },
   {
     path: '/registration',
     name: 'registration',
-    component: Registration,
+    component: RegistrationModalValidate,
   },
   {
     path: '/login',
     name: 'login',
     component: Login,
+  },
+  {
+    path: '/basket',
+    name: 'basket',
+    component: DeletedTodo,
   },
 ]
 

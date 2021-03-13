@@ -6,5 +6,13 @@
   "CategoryTodoComplete": "Выполненые",
   "TitleNewTodo": "Заголовок",
   "DescriptionNewTodo": "Описание",
-  "AddNewTask": "Введите новую задачу"
+  "AddNewTask": "Введите новую задачу",
+  "AddNewTodo": "Создать задачу",
+  "RegistrationName": "Ваше имя",
+  "RegistrationErrorFieldIsRequired": "Поле обязательно",
+  "RegistrationErrorFieldNameIsMinLength": "Имя должно быть больше ",
+  "RegistrationErrorFieldEmailIsMinLength": "Email должен быть больше ",
+  "RegistrationErrorFieldEmailNotCorrect": "Email не корректен!",
+  "RegistrationErrorFieldPasswordNotCorrect": "Пароль не корректен!"
+
 }
