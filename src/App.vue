@@ -39,16 +39,27 @@
                   <p>{{ 'UserGreeting' | localize }}: <b>{{ person.name }}</b></p>
                   <p @click="userExit" class="logoutAccount">{{ 'UserLogout' | localize }}</p>
                 </div>
-                <div @click="openSearchTodoInput" class="material-icons">search</div>
+                <div class="todo_search_wrapper">
+                  <div @click="openSearchTodoInput" class="material-icons">search</div>
+                </div>
 
-                <draggable v-model="todoDeletedList" group="todo" @end="onEnd">
+                <draggable v-model="todoDeletedList" group="todo" @end="onEnd" ghost-class="hidden-ghost">
                   <div class="basket_wrapper">
-                      <router-link class="material-icons" to="/basket">delete_forever</router-link>
+                    <router-link class="material-icons" to="/basket" title="Deleted tasks">delete_forever
+                    </router-link>
                     <div class="basket_count_background" v-if="todoDeletedList.length">
                       <div class="basket_count">{{ getDeletedTodoUser.length }}</div>
                     </div>
                   </div>
                 </draggable>
+
+                  <div class="todo_expired_wrapper">
+                    <router-link class="material-icons" to="/expired" title="Expired tasks">hourglass_disabled
+                    </router-link>
+                    <div class="todo_expired_background" v-if="getExpiredTodoUser.length">
+                      <div class="todo_expired_count">{{ getExpiredTodoUser.length }}</div>
+                    </div>
+                  </div>
 
 
                 <div>
@@ -99,15 +110,11 @@ export default {
     }
   },
   mounted() {
-    if (this.getCurrentUserInfo.length > 0) {
-      this.$store.state.isAuth = true
-    } else {
-      this.$store.state.isAuth = false
-    }
+    this.$store.state.isAuth = this.getCurrentUserInfo.length > 0;
     this.isRuLocale = this.getCurrentUserInfo[0].locale === 'ru-RU'
   },
   computed: {
-    ...mapGetters(['getUserList', 'isAuthCheck', 'getCurrentUserInfo', 'getDeletedTodoUser']),
+    ...mapGetters(['getUserList', 'isAuthCheck', 'getCurrentUserInfo', 'getDeletedTodoUser', 'getExpiredTodoUser']),
     todoDeletedList: {
       get() {
         return this.getDeletedTodoUser
@@ -115,10 +122,18 @@ export default {
       set(value) {
         this.$store.dispatch("getDeletedTodos", value);
       }
+    },
+    todoExpiredList: {
+      get() {
+        return this.getExpiredTodoUser
+      },
+      set(value) {
+        this.$store.dispatch("updateExpiredTodos", value);
+      }
     }
   },
   methods: {
-    ...mapActions(['checkUserData', 'userExit', 'openSearchTodoInput', 'updateInfoUser']),
+    ...mapActions(['checkUserData', 'userExit', 'openSearchTodoInput', 'updateInfoUser', 'updateExpiredTodos']),
     openBasket() {
       this.$router.push('basket')
     },
@@ -158,13 +173,33 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 
 .basket_wrapper {
   position: relative;
 
   & .material-icons {
     font-size: 44px;
+    margin: 0;
+  }
+}
+
+.todo_expired_wrapper {
+  position: relative;
+  margin: 0 15px;
+
+  & .material-icons {
+    font-size: 44px;
+    margin: 0;
+  }
+}
+
+.todo_search_wrapper {
+  margin: 0 15px;
+
+  & .material-icons {
+    font-size: 44px;
+    margin: 0;
   }
 }
 
@@ -173,11 +208,25 @@ export default {
   border-radius: 50%;
   position: absolute;
   top: 20px;
-  left: 67px;
+  left: 57%;
+  z-index: 1;
+}
+
+.todo_expired_background {
+  background: #ff0000;
+  border-radius: 50%;
+  position: absolute;
+  top: 20px;
+  left: 57%;
   z-index: 1;
 }
 
 .basket_count {
+  font-size: 14px;
+  padding: 1px 4px 1px 4px;
+}
+
+.todo_expired_count {
   font-size: 16px;
   padding: 1px 4px 1px 4px;
 }
@@ -216,6 +265,10 @@ export default {
   justify-content: center;
 }
 
+.hidden-ghost {
+  display: none !important;
+}
+
 .person_name {
   margin-left: 50px;
 }
@@ -243,7 +296,7 @@ export default {
 
 .material-icons {
   font-size: 40px;
-  margin: 0 40px;
+  margin: 0 20px;
 }
 
 /*----------------------*/

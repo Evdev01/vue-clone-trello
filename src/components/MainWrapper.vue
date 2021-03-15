@@ -26,8 +26,9 @@
               :timeout="3000"
           />
 
-            <p class="main__wrapper-title">{{ 'CategoryTodoExpired' | localize }}: </p>
-            <ExpiredTodo/>
+            <p class="main__wrapper-title">{{ 'CategoryTodoInProgress' | localize }}: </p>
+
+          <TodoInProgress/>
 
         </div>
         <div class="main__wrapper-item">
@@ -48,13 +49,13 @@ import SearchTodo from '@/components/SearchTodo'
 import Todo from '@/components/Todo'
 import {mapActions, mapGetters} from 'vuex'
 import CompletedTodo from '@/components/CompletedTodo'
-import ExpiredTodo from '@/components/ExpiredTodo'
 import Notification from '@/components/notifications/Notification'
 import draggable from 'vuedraggable'
+import TodoInProgress from '@/components/TodoInProgress'
 
 export default {
   name: "MainWrapper",
-  components: {Notification, ExpiredTodo, CompletedTodo, Todo, SearchTodo, NewTodo, draggable},
+  components: {TodoInProgress, Notification, CompletedTodo, Todo, SearchTodo, NewTodo, draggable},
   data() {
     return {
       search: '',
@@ -74,7 +75,7 @@ export default {
       this.isDateSet(id)
 
       let res = new Date(date)
-          .toLocaleString('ru', {day: 'numeric', month: 'long', year: 'numeric'}) === this.currentDate
+          .toLocaleString('ru', {day: 'numeric', month: 'long', year: 'numeric'}) < this.currentDate
 
 
       if (res) {
@@ -102,11 +103,11 @@ export default {
     ...mapActions(['todoExpiredChangeColor', 'saveDateSetByUser', 'isDateSet', 'todoNotExpiredChangeColor']),
     setDate(index, date, id) {
 
+
       this.isDateSet(id)
 
       let res = new Date(date)
-          .toLocaleString('ru', {day: 'numeric', month: 'long', year: 'numeric'}) === this.currentDate
-
+          .toLocaleString('ru', {day: 'numeric', month: 'long', year: 'numeric'}) < this.currentDate
 
       if (res) {
         this.getCurrentTodoUser.map(todo => {
@@ -160,7 +161,7 @@ export default {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  margin: 170px -15px 0 -15px;
+  margin: 100px -15px 0 -15px;
 }
 
 .main__wrapper-item {

@@ -4,6 +4,7 @@ import Login from '@/components/Login'
 import RegistrationModalValidate from '@/components/validateForm/RegistrationModalValidate'
 import DeletedTodo from '@/components/DeletedTodo'
 import MainWrapper from '@/components/MainWrapper'
+import ExpiredTodo from '@/components/ExpiredTodo'
 
 Vue.use(VueRouter)
 
@@ -27,6 +28,11 @@ const routes = [
     path: '/basket',
     name: 'basket',
     component: DeletedTodo,
+  },
+  {
+    path: '/expired',
+    name: 'expired',
+    component: ExpiredTodo,
   },
 ]
 

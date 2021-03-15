@@ -3,7 +3,7 @@
     <form @submit.prevent="submit" class="new-todo">
 
       <div class="form-item" :class="{ errorInput: $v.title.$error }">
-        <label>Email:</label>
+        <label>Title:</label>
         <p class="errorText" v-if="!$v.title.required ">Field is required</p>
         <input
             placeholder="Title"
@@ -14,7 +14,7 @@
       </div>
 
       <div class="form-item" :class="{ errorInput: $v.description.$error }">
-        <label>Email:</label>
+        <label>Description:</label>
         <p class="errorText" v-if="!$v.description.required ">Field is required</p>
         <input
             placeholder="Description"
@@ -70,6 +70,7 @@ export default {
           let todo = {
             id: new Date().getTime(),
             title: this.title,
+            timeCreated: new Date(Date.now()).toLocaleString(),
             description: this.description,
             completed: this.completed,
             todoOverdue: this.todoOverdue,
@@ -77,7 +78,9 @@ export default {
             isSetDate: false,
             editModeInputDate: false,
             editModeTitle: false,
+            editModeTitleFull: false,
             editModeDescription: false,
+            editModeDescriptionFull: false,
             date: ''
           }
           this.addTodoUser(todo)

@@ -41,7 +41,7 @@ export default {
         },
         checkUserData(state, checkUser) {
 
-            let userLogin = state.usersList.find(user => user.email === checkUser.email && user.password === checkUser.password)
+            let userLogin = state.usersList.find(user => user.email === checkUser.email)
 
             if (userLogin) {
                 state.currentUserInfo.push(userLogin)
@@ -91,6 +91,12 @@ export default {
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList)) // saving a new user to the list || update user data in usersList
         },
+        removeInProgressTodo(state, index) {
+            state.currentUserInfo[0].userTodos.inProgressTodo.splice(index, 1)
+
+            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
+            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList)) // saving a new user to the list || update user data in usersList
+        },
         removeTodoFromBasket(state, index) {
             state.currentUserInfo[0].userTodos.deletedTodo.splice(index, 1)
 
@@ -122,8 +128,15 @@ export default {
         },
         changeTitleTodo(state, updateTodo) {
 
+            const currentTodo = state.currentUserInfo[0].userTodos.currentTodo
+            const inProgressTodo = state.currentUserInfo[0].userTodos.inProgressTodo
+            const completedTodo = state.currentUserInfo[0].userTodos.completedTodo
 
-            const findTodoById = state.currentUserInfo[0].userTodos.currentTodo
+            const allTodos = [...currentTodo, ...inProgressTodo, ...completedTodo]
+
+            console.log(allTodos)
+
+            const findTodoById = allTodos
                 .find(todo => todo.id === updateTodo.id)
 
             findTodoById.title = updateTodo.title
@@ -136,7 +149,13 @@ export default {
         changeDescriptionTodo(state, updatedDescription) {
 
 
-            const findTodoById = state.currentUserInfo[0].userTodos.currentTodo
+            const currentTodo = state.currentUserInfo[0].userTodos.currentTodo
+            const inProgressTodo = state.currentUserInfo[0].userTodos.inProgressTodo
+            const completedTodo = state.currentUserInfo[0].userTodos.completedTodo
+
+            const allTodos = [...currentTodo, ...inProgressTodo, ...completedTodo]
+
+            const findTodoById = allTodos
                 .find(todo => todo.id === updatedDescription.id)
 
             findTodoById.description = updatedDescription.description
@@ -204,9 +223,16 @@ export default {
         getDeletedTodos: (state, payload) => {
             state.currentUserInfo[0].userTodos.deletedTodo = payload;
         },
-        returnTodoInActive: (state, todo) => {
+        updateExpiredTodos: (state, payload) => {
+            state.currentUserInfo[0].userTodos.expiredTodo = payload;
+        },
+        todoExpiredInActive: (state, todo) => {
 
-            state.currentUserInfo[0].userTodos.deletedTodo.splice(todo, 1);
+            const findTodo = state.currentUserInfo[0].userTodos.expiredTodo.find(t => t.id === todo.id)
+            findTodo.editModeInputDate = false
+            findTodo.date = ''
+
+            state.currentUserInfo[0].userTodos.expiredTodo.splice(todo, 1);
             state.currentUserInfo[0].userTodos.currentTodo.unshift(todo)
 
         },
@@ -215,6 +241,9 @@ export default {
         },
         updateCompleteTodo: (state, payload) => {
             state.currentUserInfo[0].userTodos.completedTodo = payload;
+        },
+        updateInProgressTodo: (state, payload) => {
+            state.currentUserInfo[0].userTodos.inProgressTodo = payload;
         },
         updateLocalList (state) {
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
@@ -229,13 +258,30 @@ export default {
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
         },
-        resetDateSetting (state, todo) {
+        editModeSateDateInProgressTodo (state, todo) {
 
-            console.log(todo)
+            const findTodo = state.currentUserInfo[0].userTodos.inProgressTodo.find(t => t.id === todo.id)
+
+            findTodo.editModeInputDate = true
+
+            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
+            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
+        },
+        resetDateSetting (state, todo) {
 
             const findTodo = state.currentUserInfo[0].userTodos.currentTodo.find(t => t.id === todo.id)
 
-            console.log(findTodo)
+
+            findTodo.isDateSet = false
+            findTodo.date = ''
+
+            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
+            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
+        },
+        resetDateSettingInProgressTodo (state, todo) {
+
+            const findTodo = state.currentUserInfo[0].userTodos.inProgressTodo.find(t => t.id === todo.id)
+
 
             findTodo.isDateSet = false
             findTodo.date = ''
@@ -246,6 +292,15 @@ export default {
         offEditModeSateDateAction (state, id) {
 
             const findTodo = state.currentUserInfo[0].userTodos.currentTodo.find(t => t.id === id)
+
+            findTodo.editModeInputDate = false
+
+            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
+            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
+        },
+        offEditModeSateDateActionInProgressTodo (state, id) {
+
+            const findTodo = state.currentUserInfo[0].userTodos.inProgressTodo.find(t => t.id === id)
 
             findTodo.editModeInputDate = false
 
@@ -265,9 +320,29 @@ export default {
 
             findUser.locale = newInfo.locale
 
-            console.log(findUser)
-            console.log(newInfo.locale)
-            console.log('update',findUser)
+            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
+            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
+        },
+        todoInBasket (state, todo) {
+
+            state.currentUserInfo[0].userTodos.deletedTodo.unshift(todo)
+            state.currentUserInfo[0].userTodos.currentTodo.splice(todo, 1)
+
+            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
+            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
+        },
+        deletePermanently (state, todo) {
+
+            state.currentUserInfo[0].userTodos.currentTodo.splice(todo, 1)
+
+            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
+            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
+        },
+        returnTodoInActive (state, todo) {
+
+
+            state.currentUserInfo[0].userTodos.deletedTodo.splice(todo, 1)
+            state.currentUserInfo[0].userTodos.currentTodo.unshift(todo)
 
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
@@ -308,6 +383,9 @@ export default {
         },
         removeTodoCompleted(ctx, index) {
             ctx.commit('removeTodoCompleted', index)
+        },
+        removeInProgressTodo(ctx, index) {
+            ctx.commit('removeInProgressTodo', index)
         },
         removeTodoFromBasket(ctx, index) {
             ctx.commit('removeTodoFromBasket', index)
@@ -351,8 +429,14 @@ export default {
         editModeSateDateAction(ctx, todo) {
             ctx.commit('editModeSateDateAction', todo)
         },
+        editModeSateDateInProgressTodo(ctx, todo) {
+            ctx.commit('editModeSateDateInProgressTodo', todo)
+        },
         offEditModeSateDateAction(ctx, id) {
             ctx.commit('offEditModeSateDateAction', id)
+        },
+        offEditModeSateDateActionInProgressTodo(ctx, id) {
+            ctx.commit('offEditModeSateDateActionInProgressTodo', id)
         },
         updateCurrentTodo: ({commit}, payload) => {
             commit("updateCurrentTodo", payload);
@@ -362,6 +446,9 @@ export default {
         },
         updateCompleteTodo: ({commit}, payload) => {
             commit("updateCompleteTodo", payload);
+        },
+        updateInProgressTodo: ({commit}, payload) => {
+            commit("updateInProgressTodo", payload);
         },
         updateLocalList: ({commit}, payload) => {
             commit("updateLocalList", payload);
@@ -375,11 +462,23 @@ export default {
         resetDateSetting: ({commit}, todo) => {
             commit("resetDateSetting", todo);
         },
+        resetDateSettingInProgressTodo: ({commit}, todo) => {
+            commit("resetDateSettingInProgressTodo", todo);
+        },
         getDeletedTodos: ({commit}, todo) => {
             commit("getDeletedTodos", todo);
         },
+        updateExpiredTodos: ({commit}, todo) => {
+            commit("updateExpiredTodos", todo);
+        },
         returnTodoInActive: ({commit}, todo) => {
             commit("returnTodoInActive", todo);
+        },
+        todoInBasket: ({commit}, todo) => {
+            commit("todoInBasket", todo);
+        },
+        deletePermanently: ({commit}, todo) => {
+            commit("deletePermanently", todo);
         },
     },
     state: {
@@ -420,6 +519,9 @@ export default {
         },
         getCompletedTodoUser(state) {
             return state.currentUserInfo[0].userTodos.completedTodo
+        },
+        getInProgressTodoUser(state) {
+            return state.currentUserInfo[0].userTodos.inProgressTodo
         },
         isSearchTodoInputOpen(state) {
             return state.currentUserInfo[0].openSearchTodoInput

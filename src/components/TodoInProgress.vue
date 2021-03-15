@@ -1,9 +1,9 @@
 <template>
   <div class="todos">
-    <draggable v-model="todoCompleteList" group="todo" @end="onEnd">
-      <div class="todo" :class="{ todoCheck: !todo.completed }" v-for="todo in getCompletedTodoUser"
+    <draggable v-model="todoInProgressList" group="todo" @end="onEnd">
+      <div class="todo" :class="{ todoCheck: !todo.completed }" v-for="(todo, index) in getInProgressTodoUser"
            :key="todo.id">
-        <div class="todo-header" :class="{ todoCheck: !todo.completed }">
+        <div class="todo-header">
 
           <p v-if="!todo.editModeTitle" @click="editTitleMode(todo)">{{ todo.title }}</p>
           <input v-model="newValueTitleTodo" v-if="todo.editModeTitle" :ref="'input_item_' + todo.id"
@@ -18,7 +18,24 @@
           <input v-model="newValueDescriptionTodo" v-if="todo.editModeDescription" :ref="'input_item_' + todo.id"
                  @blur="changeDescriptionButton(todo)" type="text">
 
+          <div class="todoInput">
+
+            <div class="todo__date">
+              <input type="date" v-if="todo.editModeInputDate" v-model="todo.date">
+              <p v-show="todo.date.length">Завершить к: {{ todo.date }}</p>
+              <div @click="editModeSateDateInProgressTodo(todo)" style="font-size: 30px" v-show="!todo.editModeInputDate" class="material-icons">restore
+              </div>
+              <div v-show="todo.date.length" class="material-icons" @click="resetDateSettingInProgressTodo(todo)">close</div>
+
+            </div>
+            <button v-show="todo.editModeInputDate" @click="setDate(index, todo.date, todo.id)">Установить дату
+              выполнения
+            </button>
+
+          </div>
+
         </div>
+
       </div>
     </draggable>
 
@@ -31,6 +48,7 @@
           :todoInfo="currentTodo"
           @closePopupMoreInfoTodo="closePopupMoreInfoTodo"
       />
+
     </PopupMoreInfoAboutTodo>
 
   </div>
@@ -43,7 +61,7 @@ import PopupMoreInfoAboutTodo from '@/components/popup/PopupMoreInfoAboutTodo'
 import MoreInfoAboutTodo from '@/components/MoreInfoAboutTodo'
 
 export default {
-  name: "CompletedTodo",
+  name: "TodoInProgress",
   components: {MoreInfoAboutTodo, PopupMoreInfoAboutTodo, draggable},
   data() {
     return {
@@ -54,7 +72,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['removeTodoCompleted', 'changeTitleActiveTodo', 'changeDescriptionActiveTodo', 'updateLocalList']),
+    ...mapActions(['removeInProgressTodo', 'changeTitleActiveTodo',
+                    'changeDescriptionActiveTodo', 'updateLocalList',
+                    'editModeSateDateInProgressTodo', 'resetDateSettingInProgressTodo', 'offEditModeSateDateActionInProgressTodo']),
     onEnd() {
       this.updateLocalList()
     },
@@ -73,6 +93,13 @@ export default {
       this.$nextTick(() => {
         this.$refs['input_item_' + todo.id][0].focus();
       });
+
+    },
+    setDate(index, date, id) {
+      this.$emit('setDate', index, date, id)
+      this.visibleBtn = false
+
+      this.offEditModeSateDateActionInProgressTodo(id)
 
     },
     changeTitleButton(todo) {
@@ -116,13 +143,13 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['getCompletedTodoUser']),
-    todoCompleteList: {
+    ...mapGetters(['getInProgressTodoUser']),
+    todoInProgressList: {
       get() {
-        return this.getCompletedTodoUser
+        return this.getInProgressTodoUser
       },
       set(value) {
-        this.$store.dispatch("updateCompleteTodo", value);
+        this.$store.dispatch("updateInProgressTodo", value);
       }
     }
   }
@@ -130,7 +157,5 @@ export default {
 </script>
 
 <style scoped>
-.todo {
-  background-color: #26de81;
-}
+
 </style>

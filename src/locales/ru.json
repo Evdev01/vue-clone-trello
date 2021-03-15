@@ -1,8 +1,8 @@
 {
   "UserGreeting": "Приветствую",
   "UserLogout": "Выйти",
-  "CategoryTodoActive": "Активные",
-  "CategoryTodoExpired": "Просроченные",
+  "CategoryTodoActive": "Нужно сделать",
+  "CategoryTodoInProgress": "В процессе",
   "CategoryTodoComplete": "Выполненые",
   "TitleNewTodo": "Заголовок",
   "DescriptionNewTodo": "Описание",
@@ -13,6 +13,15 @@
   "RegistrationErrorFieldNameIsMinLength": "Имя должно быть больше ",
   "RegistrationErrorFieldEmailIsMinLength": "Email должен быть больше ",
   "RegistrationErrorFieldEmailNotCorrect": "Email не корректен!",
-  "RegistrationErrorFieldPasswordNotCorrect": "Пароль не корректен!"
-
+  "RegistrationErrorFieldPasswordNotCorrect": "Пароль не корректен!",
+  "FullInfoAboutTodoTitle": "Заголовок",
+  "FullInfoAboutTodoDescription": "Описание",
+  "DeleteTodoPermanently": "Удалить совсем",
+  "DeleteTodoBasket": "Поместить в корзину",
+  "TodoTableTitle": "Заголовок",
+  "TodoTableDescription": "Описание",
+  "TodoTableAction": "Действие",
+  "ReturnTask": "Вернуть задачу",
+  "DeletedTodos": "Удаленные задачи",
+  "ExpiredTodos": "Просроченные задачи"
 }

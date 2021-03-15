@@ -2,7 +2,7 @@
   "UserGreeting": "Hello",
   "UserLogout": "Logout",
   "CategoryTodoActive": "Active",
-  "CategoryTodoExpired": "Expired",
+  "CategoryTodoInProgress": "In progress",
   "TitleNewTodo": "Title todo",
   "DescriptionNewTodo": "Description",
   "CategoryTodoComplete": "Completed",
@@ -13,6 +13,15 @@
   "RegistrationErrorFieldNameIsMinLength": "Name must have at least ",
   "RegistrationErrorFieldEmailIsMinLength": "Email must have at least ",
   "RegistrationErrorFieldEmailNotCorrect": "Email is not correct!",
-  "RegistrationErrorFieldPasswordNotCorrect": "Password is not correct!"
-
+  "RegistrationErrorFieldPasswordNotCorrect": "Password is not correct!",
+  "FullInfoAboutTodoTitle": "Title",
+  "FullInfoAboutTodoDescription": "Description",
+  "DeleteTodoPermanently": "Delete permanently",
+  "DeleteTodoBasket": "Remove to cart",
+  "TodoTableTitle": "Title",
+  "TodoTableDescription": "Description",
+  "TodoTableAction": "Action",
+  "ReturnTask": "Return task",
+  "DeletedTodos": "Deleted todos",
+  "ExpiredTodos": "Expired todos"
 }

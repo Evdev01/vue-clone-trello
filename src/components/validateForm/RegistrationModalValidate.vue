@@ -76,6 +76,7 @@ export default {
           currentTodo: [],
           expiredTodo: [],
           completedTodo: [],
+          inProgressTodo: [],
           deletedTodo: []
         }
       },
@@ -115,6 +116,7 @@ export default {
             currentTodo: [],
             expiredTodo: [],
             completedTodo: [],
+            inProgressTodo: [],
             deletedTodo: []
           }
 

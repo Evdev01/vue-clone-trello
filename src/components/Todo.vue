@@ -1,7 +1,7 @@
 <template>
   <div class="todos">
     <p class="notTodo" v-if="!todos.length">{{ 'AddNewTask' | localize }}</p>
-    <span class="material-icons" @click="showPopupInfo">add</span>
+    <span class="material-icons" style="font-size: 30px" @click="showPopupInfo">add</span>
 
     <draggable v-model="todoCurrent" group="todo" @end="onEnd">
 
@@ -13,11 +13,13 @@
           <input v-model="newValueTitleTodo" v-if="todo.editModeTitle" :ref="'input_item_' + todo.id"
                  @blur="changeTitleButton(todo)" type="text">
 
-          <p style="cursor: pointer" @click="removeTodo(index)">x</p>
+          <p class="material-icons" @click="showPopupMoreInfoTodo(todo)">open_in_full</p>
+
         </div>
 
         <div class="todo-body">
-          <p v-if="!todo.editModeDescription" @click="editDescriptionMode(todo)" class="todo_description">{{ todo.description }}</p>
+          <p v-if="!todo.editModeDescription" @click="editDescriptionMode(todo)" class="todo_description">
+            {{ todo.description }}</p>
           <input v-model="newValueDescriptionTodo" v-if="todo.editModeDescription" :ref="'input_item_' + todo.id"
                  @blur="changeDescriptionButton(todo)" type="text">
         </div>
@@ -27,7 +29,8 @@
           <div class="todo__date">
             <input type="date" v-if="todo.editModeInputDate" v-model="todos.date">
             <p v-show="todo.date.length">Завершить к: {{ todo.date }}</p>
-            <div @click="editModeSateDateAction(todo)" v-show="!todo.editModeInputDate" class="material-icons">restore</div>
+            <div @click="editModeSateDateAction(todo)" style="font-size: 30px" v-show="!todo.editModeInputDate" class="material-icons">restore
+            </div>
             <div v-show="todo.date.length" class="material-icons" @click="resetDateSetting(todo)">close</div>
 
           </div>
@@ -39,6 +42,17 @@
       </div>
 
     </draggable>
+
+    <PopupMoreInfoAboutTodo
+        v-if="isMoreInfoTodoPopupVisible"
+        @closePopupMoreInfoTodo="closePopupMoreInfoTodo"
+        :currentTodo="currentTodo"
+    >
+      <MoreInfoAboutTodo
+        :todoInfo="currentTodo"
+        @closePopupMoreInfoTodo="closePopupMoreInfoTodo"
+      />
+    </PopupMoreInfoAboutTodo>
 
 
 
@@ -61,19 +75,23 @@ import {mapActions, mapGetters} from 'vuex'
 import Popup from '@/components/popup/Popup'
 import NewTodo from '@/components/NewTodo'
 import draggable from 'vuedraggable'
+import PopupMoreInfoAboutTodo from '@/components/popup/PopupMoreInfoAboutTodo'
+import MoreInfoAboutTodo from '@/components/MoreInfoAboutTodo'
 
 export default {
   name: "Todo",
-  components: {NewTodo, Popup, draggable},
+  components: {MoreInfoAboutTodo, PopupMoreInfoAboutTodo, NewTodo, Popup, draggable},
   data() {
     return {
       newValueTitleTodo: '',
       newValueDescriptionTodo: '',
       isInfoPopupVisible: false,
+      isMoreInfoTodoPopupVisible: false,
       search: this.value,
       visibleBtn: false,
       test: false,
       setDateButton: false,
+      currentTodo: {},
       setTime: false,
       changeTitle: false,
       currentDate: new Date().toLocaleString('ru', {day: 'numeric', month: 'long', year: 'numeric'})
@@ -84,12 +102,6 @@ export default {
       type: Array,
       default: () => []
     },
-    product: {
-      type: Object,
-      default() {
-        return {}
-      }
-    }
   },
   computed: {
     ...mapGetters(['getCurrentTodoUser']),
@@ -100,7 +112,7 @@ export default {
       set(value) {
         this.$store.dispatch("updateCurrentTodo", value);
       }
-    },
+    }
   },
   methods: {
     ...mapActions(['removeTodo', 'changeTitleTodo', 'changeDescriptionTodo',
@@ -118,10 +130,20 @@ export default {
     showPopupInfo() {
       this.isInfoPopupVisible = true
     },
+    showPopupMoreInfoTodo(todo) {
+      this.currentTodo = todo
+      this.isMoreInfoTodoPopupVisible = true
+    },
     closePopup() {
       this.isInfoPopupVisible = false
     },
     closePopupNewTodo() {
+      this.isInfoPopupVisible = false
+    },
+    closePopupMoreInfoTodo() {
+      this.isMoreInfoTodoPopupVisible = false
+    },
+    closePopupTodoInfo() {
       this.isInfoPopupVisible = false
     },
     editTitleMode: function (todo) {
@@ -136,6 +158,7 @@ export default {
     },
     editDescriptionMode: function (todo) {
       const findTodo = this.getCurrentTodoUser.find(t => t.id === todo.id)
+      this.currentTodo = findTodo
 
       findTodo.editModeDescription = true
 
@@ -173,7 +196,7 @@ export default {
 
         this.changeDescriptionTodo(updatedDescription)
       }
-    },
+    }
   }
 }
 </script>
@@ -199,12 +222,6 @@ export default {
     cursor: move;
   }
 
-}
-
-.todos {
-  & span  {
-    font-size: 30px;
-  }
 }
 
 .todo__date {
@@ -286,6 +303,14 @@ export default {
   align-items: center;
   justify-content: space-between;
 
+  & .material-icons {
+    color: #000000;
+
+    &:hover {
+      transform: scale(1.3);
+    }
+  }
+
   h1 {
     font-size: 32px;
   }
@@ -323,6 +348,7 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+
   &:hover {
     cursor: pointer;
   }
