@@ -72,6 +72,7 @@ export default {
         password: '',
         date: '',
         id: new Date().getTime(),
+        background: '',
         userTodos: {
           currentTodo: [],
           expiredTodo: [],
@@ -112,6 +113,7 @@ export default {
           openSearchTodoInput: false,
           locale: 'ru-RU',
           date: '',
+          background: '',
           userTodos: {
             currentTodo: [],
             expiredTodo: [],

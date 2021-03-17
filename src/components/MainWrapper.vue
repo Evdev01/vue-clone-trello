@@ -2,6 +2,8 @@
   <div class="main__wrapper" v-if="isAuthCheck">
     <div class="container">
 
+
+
       <SearchTodo
           v-if="isSearchTodoInputOpen"
           :value="search"
@@ -39,6 +41,7 @@
         </div>
       </div>
     </div>
+
 
   </div>
 </template>
@@ -131,7 +134,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getCurrentTodoUser', 'isAuthCheck', 'getExpiredTodoUser', 'getCompletedTodoUser', 'isSearchTodoInputOpen']),
+    ...mapGetters(['getCurrentTodoUser', 'isAuthCheck', 'getExpiredTodoUser', 'getCompletedTodoUser', 'isSearchTodoInputOpen', 'getGalleryBackgroundImg']),
     notesFilter() {
       if (this.isAuthCheck) {
         let array = this.getCurrentTodoUser,

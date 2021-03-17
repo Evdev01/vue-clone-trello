@@ -347,6 +347,26 @@ export default {
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
         },
+        selectNewBackground (state, img) {
+
+            const findImg = state.galleryBackground.find(i => i.id === img.id)
+
+            state.currentUserInfo[0].background = findImg.url
+
+            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
+            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
+        },
+        resetBackground (state) {
+
+            const findCurrentPerson = state.currentUserInfo[0]
+
+            console.log(findCurrentPerson)
+
+            findCurrentPerson.background = ''
+
+            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
+            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
+        },
 
     },
     actions: {
@@ -480,6 +500,12 @@ export default {
         deletePermanently: ({commit}, todo) => {
             commit("deletePermanently", todo);
         },
+        selectNewBackground: ({commit}, img) => {
+            commit("selectNewBackground", img);
+        },
+        resetBackground: ({commit}) => {
+            commit("resetBackground");
+        },
     },
     state: {
         isAuth: isAuthSave ? JSON.parse(isAuthSave) : false,
@@ -496,7 +522,15 @@ export default {
                 }
             }
         ],
-        currentUserInfo: saveCurrentUser ? JSON.parse(saveCurrentUser) : []
+        currentUserInfo: saveCurrentUser ? JSON.parse(saveCurrentUser) : [],
+        galleryBackground: [
+            {id: 1, url: 'http://st.gde-fon.com/wallpapers_original/658579_meduza_meduzyi_podvodnyiy-mir_voda_more_okean_obit_6000x4000_www.Gde-Fon.com.jpg'},
+            {id: 2, url: 'http://st.gde-fon.com/wallpapers_original/652426_zima_priroda_derevya_sneg_nebo_2950x2094_www.Gde-Fon.com.jpg'},
+            {id: 3, url: 'http://st.gde-fon.com/wallpapers_original/652424_zima_priroda_derevya_sneg_les_2950x2094_www.Gde-Fon.com.jpg'},
+            {id: 4, url: 'http://st.gde-fon.com/wallpapers_original/652428_zima_priroda_derevya_sneg_nebo_les_goryi_2950x2094_www.Gde-Fon.com.jpg'},
+            {id: 5, url: 'http://st.gde-fon.com/wallpapers_original/657791_zakat_nebo_derevya_priroda_4928x3264_www.Gde-Fon.com.jpg'},
+            {id: 6, url: 'http://st.gde-fon.com/wallpapers_original/657795_punchbowl-falls_columbia-river-gorge_vodopad_reka__1801x1327_www.Gde-Fon.com.jpg'},
+        ]
     },
     getters: {
         getUserList(state) {
@@ -528,6 +562,9 @@ export default {
         },
         getLocaleUser(state) {
             return state.currentUserInfo[0].locale
+        },
+        getGalleryBackgroundImg(state) {
+            return state.galleryBackground
         },
     }
 }

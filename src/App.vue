@@ -1,57 +1,58 @@
 <template>
   <div id="app" class="app">
-
-    <div v-if="!isAuthCheck" class="starting_greeting">
-      <div class="starting_greeting_text">
-        <div>
-          <p>Welcome to my application</p>
-          <p>Click on registration to continue</p>
-        </div>
-        <div>
-          <span class="material-icons">north</span>
+    <div class="app_wrapper">
+      <img class="app_background" :src="getCurrentUserInfo[0].background || defaultBackground">
+      <div v-if="!isAuthCheck" class="starting_greeting">
+        <div class="starting_greeting_text">
+          <div>
+            <p>Welcome to my application</p>
+            <p>Click on registration to continue</p>
+          </div>
+          <div>
+            <span class="material-icons">north</span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="container">
+      <div class="container">
 
-      <header>
-        <div class="navbar">
-          <div class="container">
-            <div class="navbar-content">
-              <router-link to="/home">
-                <div class="logo">VUE-TODO</div>
-              </router-link>
-              <ul class="navbar-list" v-if="!isAuthCheck">
-                <li class="navbar-item">
-                  <router-link title="Registration" to="/registration" class="navbar-link">
-                    Registration
-                  </router-link>
-                </li>
-                <li class="navbar-item">
-                  <router-link title="Login" to="/login" class="navbar-link">
-                    Login
-                  </router-link>
-                </li>
-              </ul>
-              <div v-show="isAuthCheck" class="personInfo" v-for="person in getCurrentUserInfo">
-                <div class="person_name">
-                  <p>{{ 'UserGreeting' | localize }}: <b>{{ person.name }}</b></p>
-                  <p @click="userExit" class="logoutAccount">{{ 'UserLogout' | localize }}</p>
-                </div>
-                <div class="todo_search_wrapper">
-                  <div @click="openSearchTodoInput" class="material-icons">search</div>
-                </div>
-
-                <draggable v-model="todoDeletedList" group="todo" @end="onEnd" ghost-class="hidden-ghost">
-                  <div class="basket_wrapper">
-                    <router-link class="material-icons" to="/basket" title="Deleted tasks">delete_forever
+        <header :class="{header_opacity: getCurrentUserInfo[0].background.length}">
+          <div class="navbar">
+            <div class="container">
+              <div class="navbar-content">
+                <router-link to="/home">
+                  <div class="logo">VUE-TODO</div>
+                </router-link>
+                <ul class="navbar-list" v-if="!isAuthCheck">
+                  <li class="navbar-item">
+                    <router-link title="Registration" to="/registration" class="navbar-link">
+                      Registration
                     </router-link>
-                    <div class="basket_count_background" v-if="todoDeletedList.length">
-                      <div class="basket_count">{{ getDeletedTodoUser.length }}</div>
-                    </div>
+                  </li>
+                  <li class="navbar-item">
+                    <router-link title="Login" to="/login" class="navbar-link">
+                      Login
+                    </router-link>
+                  </li>
+                </ul>
+                <div v-show="isAuthCheck" class="personInfo" v-for="person in getCurrentUserInfo">
+                  <div class="person_name">
+                    <p>{{ 'UserGreeting' | localize }}: <b>{{ person.name }}</b></p>
+                    <p @click="userExit" class="logoutAccount">{{ 'UserLogout' | localize }}</p>
                   </div>
-                </draggable>
+                  <div class="todo_search_wrapper">
+                    <div @click="openSearchTodoInput" class="material-icons">search</div>
+                  </div>
+
+                  <draggable v-model="todoDeletedList" group="todo" @end="onEnd" ghost-class="hidden-ghost">
+                    <div class="basket_wrapper">
+                      <router-link class="material-icons" to="/basket" title="Deleted tasks">delete_forever
+                      </router-link>
+                      <div class="basket_count_background" v-if="todoDeletedList.length">
+                        <div class="basket_count">{{ getDeletedTodoUser.length }}</div>
+                      </div>
+                    </div>
+                  </draggable>
 
                   <div class="todo_expired_wrapper">
                     <router-link class="material-icons" to="/expired" title="Expired tasks">hourglass_disabled
@@ -60,29 +61,44 @@
                       <div class="todo_expired_count">{{ getExpiredTodoUser.length }}</div>
                     </div>
                   </div>
-
-
-                <div>
-                  <label class="switch">
-                    <input type="checkbox" v-model=" isRuLocale" @change="sendInfoUser">
-                    <div class="slider round">
-                      <span/>
+                  <div>
+                    <div class="open_board_menu">
+                      <p @click="showBoardMenu">... Меню</p>
                     </div>
-                  </label>
-                </div>
-              </div>
+                  </div>
 
+
+                  <div>
+                    <label class="switch">
+                      <input type="checkbox" v-model=" isRuLocale" @change="sendInfoUser">
+                      <div class="slider round">
+                        <span/>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+              </div>
             </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      <router-view/>
+        <router-view/>
+
+      </div>
+
+
+      <BoardMenu
+          v-if="visibleBoardMenu"
+          @showBoardMenu="showBoardMenu"
+          @resetDefaultBackground="resetDefaultBackground"
+      />
 
     </div>
 
+
   </div>
-</template>p
+</template>
 
 <script>
 
@@ -91,6 +107,8 @@ import NewTodo from '@/components/NewTodo'
 import Header from '@/components/Header'
 import {mapActions, mapGetters} from 'vuex'
 import draggable from 'vuedraggable'
+import BoarMenuGallery from '@/components/BoardMenu/BoardMenuGallery'
+import BoardMenu from '@/components/BoardMenu/BoardMenu'
 
 
 export default {
@@ -106,7 +124,9 @@ export default {
         email: '',
         password: ''
       },
-      modalRegistration: false
+      modalRegistration: false,
+      defaultBackground: 'http://st.gde-fon.com/wallpapers_original/658579_meduza_meduzyi_podvodnyiy-mir_voda_more_okean_obit_6000x4000_www.Gde-Fon.com.jpg',
+      visibleBoardMenu: false
     }
   },
   mounted() {
@@ -114,7 +134,7 @@ export default {
     this.isRuLocale = this.getCurrentUserInfo[0].locale === 'ru-RU'
   },
   computed: {
-    ...mapGetters(['getUserList', 'isAuthCheck', 'getCurrentUserInfo', 'getDeletedTodoUser', 'getExpiredTodoUser']),
+    ...mapGetters(['getUserList', 'isAuthCheck', 'getCurrentUserInfo', 'getDeletedTodoUser', 'getExpiredTodoUser', 'getGalleryBackgroundImg']),
     todoDeletedList: {
       get() {
         return this.getDeletedTodoUser
@@ -133,9 +153,15 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['checkUserData', 'userExit', 'openSearchTodoInput', 'updateInfoUser', 'updateExpiredTodos']),
+    ...mapActions(['checkUserData', 'userExit', 'openSearchTodoInput', 'updateInfoUser', 'updateExpiredTodos', 'selectNewBackground']),
     openBasket() {
       this.$router.push('basket')
+    },
+    showBoardMenu() {
+      this.visibleBoardMenu = !this.visibleBoardMenu
+    },
+    resetDefaultBackground() {
+      this.defaultBackground = ''
     },
     onEnd() {
       this.updateLocalList()
@@ -165,6 +191,8 @@ export default {
     }
   },
   components: {
+    BoardMenu,
+    BoarMenuGallery,
     Header,
     NewTodo,
     MainWrapper,
@@ -174,6 +202,15 @@ export default {
 </script>
 
 <style lang="scss">
+
+.header_opacity {
+  opacity: .6;
+
+  &:hover {
+    cursor: pointer;
+    opacity: .9;
+  }
+}
 
 .basket_wrapper {
   position: relative;
@@ -200,6 +237,14 @@ export default {
   & .material-icons {
     font-size: 44px;
     margin: 0;
+  }
+}
+
+.open_board_menu {
+  margin: 0 15px;
+
+  &:hover {
+    cursor: pointer;
   }
 }
 
@@ -236,6 +281,15 @@ export default {
   display: none;
 }
 
+.app_background {
+  position: fixed;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  min-height: 100%;
+}
+
 .starting_greeting {
   position: absolute;
   top: 0;
@@ -263,6 +317,11 @@ export default {
   align-items: center;
   text-align: center;
   justify-content: center;
+}
+
+.app_wrapper {
+  position: relative;
+  height: 100vh;
 }
 
 .hidden-ghost {
