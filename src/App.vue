@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="app">
     <div class="app_wrapper">
-      <img class="app_background" :src="getCurrentUserInfo[0].background || defaultBackground">
+      <img class="app_background" :src="getDefaultBackground.length > 1 || getCurrentUserInfo[0].background">
       <div v-if="!isAuthCheck" class="starting_greeting">
         <div class="starting_greeting_text">
           <div>
@@ -16,7 +16,7 @@
 
       <div class="container">
 
-        <header :class="{header_opacity: getCurrentUserInfo[0].background.length}">
+        <header class="header_opacity">
           <div class="navbar">
             <div class="container">
               <div class="navbar-content">
@@ -91,7 +91,6 @@
       <BoardMenu
           v-if="visibleBoardMenu"
           @showBoardMenu="showBoardMenu"
-          @resetDefaultBackground="resetDefaultBackground"
       />
 
     </div>
@@ -125,7 +124,6 @@ export default {
         password: ''
       },
       modalRegistration: false,
-      defaultBackground: 'http://st.gde-fon.com/wallpapers_original/658579_meduza_meduzyi_podvodnyiy-mir_voda_more_okean_obit_6000x4000_www.Gde-Fon.com.jpg',
       visibleBoardMenu: false
     }
   },
@@ -134,7 +132,7 @@ export default {
     this.isRuLocale = this.getCurrentUserInfo[0].locale === 'ru-RU'
   },
   computed: {
-    ...mapGetters(['getUserList', 'isAuthCheck', 'getCurrentUserInfo', 'getDeletedTodoUser', 'getExpiredTodoUser', 'getGalleryBackgroundImg']),
+    ...mapGetters(['getUserList', 'isAuthCheck', 'getCurrentUserInfo', 'getDeletedTodoUser', 'getExpiredTodoUser', 'getGalleryBackgroundImg', 'getDefaultBackground']),
     todoDeletedList: {
       get() {
         return this.getDeletedTodoUser
@@ -159,9 +157,6 @@ export default {
     },
     showBoardMenu() {
       this.visibleBoardMenu = !this.visibleBoardMenu
-    },
-    resetDefaultBackground() {
-      this.defaultBackground = ''
     },
     onEnd() {
       this.updateLocalList()

@@ -1,7 +1,7 @@
 <template>
   <div>
     <img v-for="img in getGalleryBackgroundImg" class="background_gallery_item" :src="img.url" :key="img.id"
-         @click="selectNewBackground(img)">
+         @click="selectNewBackgroundBoardMenu(img)">
   </div>
 </template>
 
@@ -14,7 +14,11 @@ export default {
     ...mapGetters(['getGalleryBackgroundImg'])
   },
   methods: {
-    ...mapActions(['selectNewBackground'])
+    ...mapActions(['selectNewBackground']),
+    selectNewBackgroundBoardMenu(img) {
+      this.selectNewBackground(img)
+      this.$emit('resetDefaultBackground')
+    }
   }
 }
 </script>

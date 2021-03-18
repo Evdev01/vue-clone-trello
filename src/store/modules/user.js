@@ -1,6 +1,7 @@
 export const saveNewUserInList = window.localStorage.getItem('saveNewUserInList')
 export const saveCurrentUser = window.localStorage.getItem('saveCurrentUser')
 export const isAuthSave = window.localStorage.getItem('isAuthSave')
+export const saveBackground = window.localStorage.getItem('saveBackground')
 
 export default {
     mutations: {
@@ -59,8 +60,12 @@ export default {
             state.currentUserInfo = []
             state.isAuth = false
 
+            state.defaultBackground = 'http://st.gde-fon.com/wallpapers_original/657795_punchbowl-falls_columbia-river-gorge_vodopad_reka__1801x1327_www.Gde-Fon.com.jpg'
+
             this.commit('saveDataUser') // deleting the data of the current user
             this.commit('saveDataUserIsAuth') // remove auth data user
+            window.localStorage.setItem('saveBackground', JSON.stringify(state.defaultBackground))
+
         },
         //    todoAction
         removeTodo(state, index) {
@@ -351,10 +356,12 @@ export default {
 
             const findImg = state.galleryBackground.find(i => i.id === img.id)
 
+            state.defaultBackground = ''
             state.currentUserInfo[0].background = findImg.url
 
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
+            window.localStorage.setItem('saveBackground', JSON.stringify(state.defaultBackground))
         },
         resetBackground (state) {
 
@@ -366,6 +373,14 @@ export default {
 
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
+        },
+        resetDefaultBackground (state) {
+
+            state.defaultBackground = ''
+
+            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
+            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
+            window.localStorage.setItem('saveBackground', JSON.stringify(state.defaultBackground))
         },
 
     },
@@ -506,6 +521,9 @@ export default {
         resetBackground: ({commit}) => {
             commit("resetBackground");
         },
+        resetDefaultBackground: ({commit}) => {
+            commit("resetDefaultBackground");
+        },
     },
     state: {
         isAuth: isAuthSave ? JSON.parse(isAuthSave) : false,
@@ -530,7 +548,9 @@ export default {
             {id: 4, url: 'http://st.gde-fon.com/wallpapers_original/652428_zima_priroda_derevya_sneg_nebo_les_goryi_2950x2094_www.Gde-Fon.com.jpg'},
             {id: 5, url: 'http://st.gde-fon.com/wallpapers_original/657791_zakat_nebo_derevya_priroda_4928x3264_www.Gde-Fon.com.jpg'},
             {id: 6, url: 'http://st.gde-fon.com/wallpapers_original/657795_punchbowl-falls_columbia-river-gorge_vodopad_reka__1801x1327_www.Gde-Fon.com.jpg'},
-        ]
+        ],
+        defaultBackground: saveBackground ? JSON.parse(saveBackground) :
+            'http://st.gde-fon.com/wallpapers_original/657795_punchbowl-falls_columbia-river-gorge_vodopad_reka__1801x1327_www.Gde-Fon.com.jpg'
     },
     getters: {
         getUserList(state) {
@@ -565,6 +585,9 @@ export default {
         },
         getGalleryBackgroundImg(state) {
             return state.galleryBackground
+        },
+        getDefaultBackground(state) {
+            return state.defaultBackground
         },
     }
 }

@@ -68,7 +68,7 @@ export default {
     }
   },
     methods: {
-    ...mapActions(['checkUserData', 'userExit']),
+    ...mapActions(['checkUserData', 'userExit', 'resetDefaultBackground']),
     submitLoginForm() {
 
       this.$v.$touch()
@@ -87,6 +87,7 @@ export default {
         this.checkUser.email = this.checkUser.password = ''
 
         this.$router.push('home')
+        this.resetDefaultBackground()
       }
     }
   }

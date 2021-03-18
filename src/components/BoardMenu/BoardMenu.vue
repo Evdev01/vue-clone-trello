@@ -11,6 +11,7 @@
       <div class="material-icons" @click="boardMenuResetBackground">close</div>
       <BoardMenuGallery
           v-if="showBoardGalleryImg"
+          @resetDefaultBackground="resetDefaultBackground"
       />
     </div>
 
@@ -33,6 +34,9 @@ export default {
     ...mapActions(['resetBackground']),
     boardMenuResetBackground() {
       this.resetBackground()
+      this.$emit('resetDefaultBackground')
+    },
+    resetDefaultBackground() {
       this.$emit('resetDefaultBackground')
     },
     showBoardMenu() {
