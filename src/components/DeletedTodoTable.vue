@@ -1,6 +1,6 @@
 <template>
   <div class="deleted_todos_table">
-    <h1>{{ 'DeletedTodos' | localize }}</h1>
+    <p class="deleted_todos_title">{{ 'DeletedTodos' | localize }}</p>
     <div class="deleted_todos_table_wrapper">
       <table>
         <thead>
@@ -46,6 +46,31 @@ export default {
 <style lang="scss">
 .deleted_todos_table {
   width: 100%;
+
+  & th {
+    background-color: hsla(0,0%,100%,.24);
+    border-radius: 26px;
+    padding: 6px 8px;
+    color: #fff;
+  }
+}
+
+tr {
+  & th {
+    text-align: center;
+  }
+
+  & td {
+    text-align: center;
+  }
+}
+
+
+.deleted_todos_title {
+  background-color: hsla(0,0%,100%,.24);
+  border-radius: 3px;
+  padding: 6px 8px;
+  color: #fff;
 }
 
 .remove_todo_basket {

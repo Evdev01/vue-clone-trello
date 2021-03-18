@@ -4,7 +4,7 @@
       <div class="container">
         <div class="main__wrapper-inner">
           <ExpiredTodoTable v-if="getExpiredTodoUser.length"/>
-          <p class="basket_empty" v-else>No tasks expired ...</p>
+          <p class="deleted_todo_empty" v-else>No tasks expired ...</p>
         </div>
       </div>
     </div>
@@ -25,11 +25,14 @@ export default {
 </script>
 
 <style>
-.basket_empty {
+.deleted_todo_empty {
   width: 100%;
   text-align: center;
   font-size: 30px;
-  color: #000000;
   opacity: .5;
+  background-color: hsla(0,0%,100%,.24);
+  border-radius: 3px;
+  padding: 6px 8px;
+  color: #fff;
 }
 </style>

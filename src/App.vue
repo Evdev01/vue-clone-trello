@@ -12,12 +12,14 @@
             <span class="material-icons">north</span>
           </div>
         </div>
+
+
       </div>
 
       <div class="container">
 
-        <header class="header_opacity">
-          <div class="navbar">
+        <header>
+          <div class="navbar" :class="{nav_no_opacity: navBarNoOpacity}">
             <div class="container">
               <div class="navbar-content">
                 <router-link to="/home">
@@ -124,7 +126,8 @@ export default {
         password: ''
       },
       modalRegistration: false,
-      visibleBoardMenu: false
+      visibleBoardMenu: false,
+      navBarNoOpacity: false
     }
   },
   mounted() {
@@ -160,6 +163,7 @@ export default {
     },
     onEnd() {
       this.updateLocalList()
+      this.navBarNoOpacity = true
     },
     sendInfoUser() {
       const idCurrentUser = this.getCurrentUserInfo[0].id
@@ -214,6 +218,21 @@ export default {
     font-size: 44px;
     margin: 0;
   }
+}
+
+.navbar {
+  background-color: rgba(255, 255, 255, .6);
+  transition: all .3s linear;
+
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 1);
+    transition: all .3s linear;
+  }
+}
+
+.nav_no_opacity {
+  background-color: rgba(255, 255, 255, 1);
 }
 
 .todo_expired_wrapper {

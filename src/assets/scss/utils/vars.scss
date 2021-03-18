@@ -15,6 +15,14 @@ $smPhoneWidth            : 320px;
 
 
 
+$color: #c0392b;
+$color-dark: #a53125;
+$speed: "0.25s";
+$transition: all #{$speed} cubic-bezier(0.310, -0.105, 0.430, 1.400);
+
+
+
+
 
 // Main color
 $default-color           : #ffffff;

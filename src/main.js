@@ -7,7 +7,7 @@ import router from './router'
 import Vuelidate from 'vuelidate'
 
 
-import './assets/scss/main.scss'
+import '@/assets/scss/main.scss'
 
 Vue.filter('localize', localizeFilter)
 Vue.use(Vuelidate)

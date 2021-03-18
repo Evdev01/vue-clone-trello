@@ -28,7 +28,10 @@ export default {
   width: 100%;
   text-align: center;
   font-size: 30px;
-  color: #000000;
   opacity: .5;
+  background-color: hsla(0,0%,100%,.24);
+  border-radius: 3px;
+  padding: 6px 8px;
+  color: #fff;
 }
 </style>

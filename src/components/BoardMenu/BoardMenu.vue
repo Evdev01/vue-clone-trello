@@ -14,8 +14,6 @@
           @resetDefaultBackground="resetDefaultBackground"
       />
     </div>
-
-
   </div>
 </template>
 
@@ -23,6 +21,7 @@
 
 import BoardMenuGallery from '@/components/BoardMenu/BoardMenuGallery'
 import {mapActions} from 'vuex'
+
 export default {
   name: "BoardMenu",
   data() {
@@ -43,7 +42,7 @@ export default {
       this.$emit('showBoardMenu')
     }
   },
-  components: {BoardMenuGallery},
+  components: {BoardMenuGallery}
 }
 </script>
 

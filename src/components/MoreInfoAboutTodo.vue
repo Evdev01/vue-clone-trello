@@ -150,7 +150,7 @@ export default {
 
 .more_info_button_basket {
   background: #e2df00;
-  padding: 6px 10px;
+  padding: 10px 15px;
   border: 0;
 
   &:hover {
@@ -162,7 +162,7 @@ export default {
 
 .more_info_button_delete {
   background: #ba0101;
-  padding: 6px 10px;
+  padding: 10px 15px;
   border: 0;
 
   &:hover {

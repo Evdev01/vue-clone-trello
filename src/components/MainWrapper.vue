@@ -176,6 +176,10 @@ export default {
 
 .main__wrapper-title {
   margin-bottom: 20px;
+  background-color: hsla(0,0%,100%,.24);
+  border-radius: 3px;
+  padding: 6px 8px;
+  color: #fff;
 }
 
 </style>
