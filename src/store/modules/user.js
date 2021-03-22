@@ -147,7 +147,6 @@ export default {
             findTodoById.title = updateTodo.title
 
 
-
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList)) // saving a new user to the list || update user data in usersList
         },
@@ -166,7 +165,6 @@ export default {
             findTodoById.description = updatedDescription.description
 
 
-
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList)) // saving a new user to the list || update user data in usersList
         },
@@ -177,7 +175,6 @@ export default {
                 .find(todo => todo.id === updateTodo.id)
 
             findTodoById.title = updateTodo.title
-
 
 
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
@@ -192,7 +189,6 @@ export default {
             findTodoById.description = updatedDescription.description
 
 
-
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList)) // saving a new user to the list || update user data in usersList
         },
@@ -205,7 +201,6 @@ export default {
             findTodoById.title = updateTodo.title
 
 
-
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList)) // saving a new user to the list || update user data in usersList
         },
@@ -216,7 +211,6 @@ export default {
                 .find(todo => todo.id === updatedDescription.id)
 
             findTodoById.description = updatedDescription.description
-
 
 
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
@@ -250,11 +244,11 @@ export default {
         updateInProgressTodo: (state, payload) => {
             state.currentUserInfo[0].userTodos.inProgressTodo = payload;
         },
-        updateLocalList (state) {
+        updateLocalList(state) {
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
         },
-        editModeSateDateAction (state, todo) {
+        editModeSateDateAction(state, todo) {
 
             const findTodo = state.currentUserInfo[0].userTodos.currentTodo.find(t => t.id === todo.id)
 
@@ -263,7 +257,7 @@ export default {
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
         },
-        editModeSateDateInProgressTodo (state, todo) {
+        editModeSateDateInProgressTodo(state, todo) {
 
             const findTodo = state.currentUserInfo[0].userTodos.inProgressTodo.find(t => t.id === todo.id)
 
@@ -272,7 +266,7 @@ export default {
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
         },
-        resetDateSetting (state, todo) {
+        resetDateSetting(state, todo) {
 
             const findTodo = state.currentUserInfo[0].userTodos.currentTodo.find(t => t.id === todo.id)
 
@@ -283,7 +277,7 @@ export default {
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
         },
-        resetDateSettingInProgressTodo (state, todo) {
+        resetDateSettingInProgressTodo(state, todo) {
 
             const findTodo = state.currentUserInfo[0].userTodos.inProgressTodo.find(t => t.id === todo.id)
 
@@ -294,7 +288,7 @@ export default {
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
         },
-        offEditModeSateDateAction (state, id) {
+        offEditModeSateDateAction(state, id) {
 
             const findTodo = state.currentUserInfo[0].userTodos.currentTodo.find(t => t.id === id)
 
@@ -303,7 +297,7 @@ export default {
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
         },
-        offEditModeSateDateActionInProgressTodo (state, id) {
+        offEditModeSateDateActionInProgressTodo(state, id) {
 
             const findTodo = state.currentUserInfo[0].userTodos.inProgressTodo.find(t => t.id === id)
 
@@ -312,14 +306,14 @@ export default {
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
         },
-        openSearchTodoInput (state) {
+        openSearchTodoInput(state) {
 
             state.currentUserInfo[0].openSearchTodoInput = !state.currentUserInfo[0].openSearchTodoInput
 
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
         },
-        updateInfoUser (state, newInfo) {
+        updateInfoUser(state, newInfo) {
 
             const findUser = state.currentUserInfo[0]
 
@@ -328,22 +322,37 @@ export default {
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
         },
-        todoInBasket (state, todo) {
+        todoInBasket(state, {id}) {
 
-            state.currentUserInfo[0].userTodos.deletedTodo.unshift(todo)
-            state.currentUserInfo[0].userTodos.currentTodo.splice(todo, 1)
+            const copyStateCurrentTodos = [...state.currentUserInfo[0].userTodos.currentTodo]
+            const findElem = copyStateCurrentTodos.findIndex(el => el.id === id)
+            copyStateCurrentTodos.splice(findElem, 1)
+            state.currentUserInfo[0].userTodos.currentTodo = copyStateCurrentTodos
+
+
+            const copyStateDeletedTodos = [...state.currentUserInfo[0].userTodos.deletedTodo]
+            copyStateDeletedTodos.unshift(findElem)
+            state.currentUserInfo[0].userTodos.deletedTodo = copyStateDeletedTodos
+
 
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
         },
-        deletePermanently (state, todo) {
+        deletePermanently(state, {id}) {
 
-            state.currentUserInfo[0].userTodos.currentTodo.splice(todo, 1)
+
+            const copyStateCurrentTodo = [...state.currentUserInfo[0].userTodos.currentTodo]
+
+            const findElem = copyStateCurrentTodo.findIndex(el => el.id === id)
+
+            copyStateCurrentTodo.splice(findElem, 1)
+
+            state.currentUserInfo[0].userTodos.currentTodo = copyStateCurrentTodo
 
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
         },
-        returnTodoInActive (state, todo) {
+        returnTodoInActive(state, todo) {
 
 
             state.currentUserInfo[0].userTodos.deletedTodo.splice(todo, 1)
@@ -352,7 +361,7 @@ export default {
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
         },
-        selectNewBackground (state, img) {
+        selectNewBackground(state, img) {
 
             const findImg = state.galleryBackground.find(i => i.id === img.id)
 
@@ -363,18 +372,16 @@ export default {
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
             window.localStorage.setItem('saveBackground', JSON.stringify(state.defaultBackground))
         },
-        resetBackground (state) {
+        resetBackground(state) {
 
             const findCurrentPerson = state.currentUserInfo[0]
-
-            console.log(findCurrentPerson)
 
             findCurrentPerson.background = ''
 
             window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
         },
-        resetDefaultBackground (state) {
+        resetDefaultBackground(state) {
 
             state.defaultBackground = ''
 
@@ -382,7 +389,40 @@ export default {
             window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
             window.localStorage.setItem('saveBackground', JSON.stringify(state.defaultBackground))
         },
+        addNewCheckBox(state, newCheckBox) {
 
+            state.currentUserInfo[0].checkBoxList.unshift(newCheckBox)
+
+            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
+            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
+
+        },
+        changeStateInput(state, elem) {
+
+
+            const idx = state.currentUserInfo[0].checkBoxList.findIndex(el => el.id === elem.id)
+
+            state.currentUserInfo[0].checkBoxList[idx].checkBoxComplete = !state.currentUserInfo[0].checkBoxList[idx].checkBoxComplete
+
+            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
+            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
+
+        },
+
+        removeCheckBox(state, {id}) {
+
+            const copyStateCheckBoxList = [...state.currentUserInfo[0].checkBoxList]
+
+            const findElem = copyStateCheckBoxList.findIndex(el => el.id === id)
+
+            copyStateCheckBoxList.splice(findElem, 1)
+
+            state.currentUserInfo[0].checkBoxList = copyStateCheckBoxList
+
+            window.localStorage.setItem('saveCurrentUser', JSON.stringify(state.currentUserInfo)) // saving info current user data || update user data
+            window.localStorage.setItem('saveNewUserInList', JSON.stringify(state.usersList))
+
+        },
     },
     actions: {
         getNewUser(ctx, newUser) {
@@ -524,6 +564,16 @@ export default {
         resetDefaultBackground: ({commit}) => {
             commit("resetDefaultBackground");
         },
+        addNewCheckBox: ({commit}, newCheckBox) => {
+            commit("addNewCheckBox", newCheckBox);
+        },
+        changeStateInput: ({commit}, elem) => {
+            commit("changeStateInput", elem);
+        },
+        removeCheckBox: ({commit}, elem) => {
+            commit("removeCheckBox", elem);
+        },
+
     },
     state: {
         isAuth: isAuthSave ? JSON.parse(isAuthSave) : false,
@@ -542,12 +592,30 @@ export default {
         ],
         currentUserInfo: saveCurrentUser ? JSON.parse(saveCurrentUser) : [],
         galleryBackground: [
-            {id: 1, url: 'http://st.gde-fon.com/wallpapers_original/658579_meduza_meduzyi_podvodnyiy-mir_voda_more_okean_obit_6000x4000_www.Gde-Fon.com.jpg'},
-            {id: 2, url: 'http://st.gde-fon.com/wallpapers_original/652426_zima_priroda_derevya_sneg_nebo_2950x2094_www.Gde-Fon.com.jpg'},
-            {id: 3, url: 'http://st.gde-fon.com/wallpapers_original/652424_zima_priroda_derevya_sneg_les_2950x2094_www.Gde-Fon.com.jpg'},
-            {id: 4, url: 'http://st.gde-fon.com/wallpapers_original/652428_zima_priroda_derevya_sneg_nebo_les_goryi_2950x2094_www.Gde-Fon.com.jpg'},
-            {id: 5, url: 'http://st.gde-fon.com/wallpapers_original/657791_zakat_nebo_derevya_priroda_4928x3264_www.Gde-Fon.com.jpg'},
-            {id: 6, url: 'http://st.gde-fon.com/wallpapers_original/657795_punchbowl-falls_columbia-river-gorge_vodopad_reka__1801x1327_www.Gde-Fon.com.jpg'},
+            {
+                id: 1,
+                url: 'http://st.gde-fon.com/wallpapers_original/658579_meduza_meduzyi_podvodnyiy-mir_voda_more_okean_obit_6000x4000_www.Gde-Fon.com.jpg'
+            },
+            {
+                id: 2,
+                url: 'http://st.gde-fon.com/wallpapers_original/652426_zima_priroda_derevya_sneg_nebo_2950x2094_www.Gde-Fon.com.jpg'
+            },
+            {
+                id: 3,
+                url: 'http://st.gde-fon.com/wallpapers_original/652424_zima_priroda_derevya_sneg_les_2950x2094_www.Gde-Fon.com.jpg'
+            },
+            {
+                id: 4,
+                url: 'http://st.gde-fon.com/wallpapers_original/652428_zima_priroda_derevya_sneg_nebo_les_goryi_2950x2094_www.Gde-Fon.com.jpg'
+            },
+            {
+                id: 5,
+                url: 'http://st.gde-fon.com/wallpapers_original/657791_zakat_nebo_derevya_priroda_4928x3264_www.Gde-Fon.com.jpg'
+            },
+            {
+                id: 6,
+                url: 'http://st.gde-fon.com/wallpapers_original/657795_punchbowl-falls_columbia-river-gorge_vodopad_reka__1801x1327_www.Gde-Fon.com.jpg'
+            }
         ],
         defaultBackground: saveBackground ? JSON.parse(saveBackground) :
             'http://st.gde-fon.com/wallpapers_original/657795_punchbowl-falls_columbia-river-gorge_vodopad_reka__1801x1327_www.Gde-Fon.com.jpg'
@@ -589,5 +657,14 @@ export default {
         getDefaultBackground(state) {
             return state.defaultBackground
         },
+        getCurrentUserCheckBoxList(state) {
+            return state.currentUserInfo[0].checkBoxList
+        },
+        getCurrentUserCheckBoxLength(state) {
+            return state.currentUserInfo[0].checkBoxList.length
+        },
+        getCurrentUserCheckBoxLengthCompleted(state) {
+            return state.currentUserInfo[0].checkBoxList.filter(el => el.checkBoxComplete).length
+        }
     }
 }

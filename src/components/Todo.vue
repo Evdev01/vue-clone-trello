@@ -29,9 +29,17 @@
           <div class="todo__date">
             <input type="date" v-if="todo.editModeInputDate" v-model="todos.date">
             <p v-show="todo.date.length">Завершить к: {{ todo.date }}</p>
-            <div @click="editModeSateDateAction(todo)" style="font-size: 30px" v-show="!todo.editModeInputDate" class="material-icons">restore
+
+            <div class="add_info_todo">
+
+            <div @click="editModeSateDateAction(todo)" style="font-size: 30px" v-show="!todo.editModeInputDate"
+                 class="material-icons">restore
             </div>
-            <div v-show="todo.date.length" class="material-icons" @click="resetDateSetting(todo)">close</div>
+              <div v-show="todo.date.length" class="material-icons" @click="resetDateSetting(todo)">close</div>
+              <div v-if="getCurrentUserCheckBoxLengthCompleted > 0">
+                {{ getCurrentUserCheckBoxLengthCompleted }} / {{ getCurrentUserCheckBoxLength }}
+              </div>
+            </div>
 
           </div>
           <button v-show="todo.editModeInputDate" @click="setDate(index, todos.date, todo.id)">Установить дату
@@ -49,11 +57,10 @@
         :currentTodo="currentTodo"
     >
       <MoreInfoAboutTodo
-        :todoInfo="currentTodo"
-        @closePopupMoreInfoTodo="closePopupMoreInfoTodo"
+          :todoInfo="currentTodo"
+          @closePopupMoreInfoTodo="closePopupMoreInfoTodo"
       />
     </PopupMoreInfoAboutTodo>
-
 
 
     <Popup
@@ -101,10 +108,10 @@ export default {
     todos: {
       type: Array,
       default: () => []
-    },
+    }
   },
   computed: {
-    ...mapGetters(['getCurrentTodoUser']),
+    ...mapGetters(['getCurrentTodoUser', 'getCurrentUserCheckBoxLengthCompleted', 'getCurrentUserCheckBoxLength']),
     todoCurrent: {
       get() {
         return this.getCurrentTodoUser
@@ -286,6 +293,10 @@ export default {
   }
 }
 
+.add_info_todo {
+  margin-top: 15px;
+  display: flex;
+}
 
 .todo-body {
   p {

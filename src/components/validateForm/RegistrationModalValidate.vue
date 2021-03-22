@@ -114,6 +114,7 @@ export default {
           locale: 'ru-RU',
           date: '',
           background: '',
+          checkBoxList: [],
           userTodos: {
             currentTodo: [],
             expiredTodo: [],
